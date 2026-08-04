@@ -1,0 +1,375 @@
+/* =====================================================
+   PLANE'R CREW - CSS PRINCIPAL
+===================================================== */
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+body {
+
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f8fafc;
+
+}
+
+
+.app {
+
+    display:flex;
+    min-height:100vh;
+
+}
+
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+
+    width:260px;
+    background:#111827;
+    color:white;
+    min-height:100vh;
+
+}
+
+
+.sidebar-brand {
+
+    padding:20px;
+    text-align:center;
+
+}
+
+
+.sidebar-logo img {
+
+    max-width:120px;
+
+}
+
+
+.logo {
+
+    font-size:24px;
+    font-weight:bold;
+    color:#ef233c;
+    margin-top:10px;
+
+}
+
+
+.logo-subtitle {
+
+    font-size:14px;
+    color:#ddd;
+
+}
+
+
+
+.sidebar ul {
+
+    list-style:none;
+    padding:0;
+    margin:0;
+
+}
+
+
+.sidebar li {
+
+    padding:15px 20px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+}
+
+
+
+.sidebar li:hover {
+
+    background:#1f2937;
+
+}
+
+
+
+.sidebar li.active {
+
+    background:#7f1d1d;
+    border-left:5px solid #ef233c;
+
+}
+
+
+
+/* =====================================================
+   CONTENU
+===================================================== */
+
+#page-content {
+
+    flex:1;
+    padding:30px;
+
+}
+
+
+
+/* =====================================================
+   DASHBOARD CARDS
+===================================================== */
+
+.dashboard-card {
+
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+
+}
+
+
+
+/* =====================================================
+   CARTES BENEVOLES
+===================================================== */
+
+.volunteer-card {
+
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    height:100%;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+}
+
+
+.volunteer-card h3 {
+
+    margin-top:15px;
+    font-size:22px;
+    font-weight:700;
+
+}
+
+
+.volunteer-card p {
+
+    color:#334155;
+
+}
+
+
+
+/* =====================================================
+   BADGES STATUT
+===================================================== */
+
+
+.volunteer-status {
+
+    display:inline-flex;
+    align-items:center;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:10px;
+
+}
+
+
+
+/* VALIDE */
+
+.volunteer-status.valide {
+
+    background:#d1fae5;
+    color:#047857;
+
+}
+
+
+
+/* REFUSE */
+
+.volunteer-status.refuse {
+
+    background:#fee2e2;
+    color:#b91c1c;
+
+}
+
+
+
+/* ATTENTE */
+
+.volunteer-status.attente {
+
+    background:#fef3c7;
+    color:#92400e;
+
+}
+
+
+
+/* COMPATIBILITE AVEC L'ANCIEN JAVASCRIPT */
+
+.volunteer-status.waiting {
+
+    background:#fef3c7;
+    color:#92400e;
+
+}
+
+
+
+/* =====================================================
+   BOUTONS
+===================================================== */
+
+
+.btn {
+
+    border-radius:10px;
+
+}
+
+
+.btn-success {
+
+    background:#047857;
+    border-color:#047857;
+
+}
+
+
+.btn-danger {
+
+    background:#b91c1c;
+    border-color:#b91c1c;
+
+}
+
+
+.btn-warning {
+
+    background:#f59e0b;
+    border-color:#f59e0b;
+
+}
+
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+
+.modal-content {
+
+    border-radius:20px;
+
+}
+
+
+.modal-header {
+
+    border-bottom:1px solid #eee;
+
+}
+
+
+.modal-footer {
+
+    border-top:1px solid #eee;
+
+}
+
+
+
+/* =====================================================
+   FICHE BENEVOLE
+===================================================== */
+
+
+.info-card {
+
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom:20px;
+
+}
+
+
+.info-card h4 {
+
+    border-bottom:1px solid #ddd;
+    padding-bottom:10px;
+    margin-bottom:20px;
+
+}
+
+
+
+/* =====================================================
+   FORMULAIRES
+===================================================== */
+
+
+textarea {
+
+    border-radius:10px !important;
+
+}
+
+
+input,
+select {
+
+    border-radius:10px !important;
+
+}
+
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+
+@media(max-width:900px){
+
+    .sidebar {
+
+        width:80px;
+
+    }
+
+
+    .sidebar span {
+
+        display:none;
+
+    }
+
+
+    #page-content {
+
+        padding:15px;
+
+    }
+
+}

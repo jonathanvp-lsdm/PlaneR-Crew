@@ -1,0 +1,318 @@
+<div class="dashboard-header">
+
+    <div>
+
+        <h1>
+            Inscriptions
+        </h1>
+
+        <p class="welcome">
+            Gestion des candidatures bénévoles Plane'R Fest
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<div id="volunteers-container" class="row g-4">
+
+
+    <div class="col-12">
+
+        Chargement des candidatures...
+
+    </div>
+
+
+</div>
+
+
+
+
+
+<!-- ===============================
+     MODAL FICHE BENEVOLE
+================================ -->
+
+
+<div class="modal fade" id="volunteerModal" tabindex="-1">
+
+
+<div class="modal-dialog modal-xl">
+
+
+<div class="modal-content">
+
+
+
+<div class="modal-header">
+
+
+<div>
+
+
+<h2 id="modalName"></h2>
+
+
+<div id="modalStatut" class="mt-2"></div>
+
+
+</div>
+
+
+
+<button
+
+type="button"
+
+class="btn btn-outline-dark"
+
+data-bs-dismiss="modal"
+
+style="border-radius:50%; width:42px; height:42px; font-size:20px;">
+
+×
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+<div class="modal-body">
+
+
+<div class="row g-4">
+
+
+
+<div class="col-md-6">
+
+<div class="dashboard-card">
+
+<h4>
+Informations personnelles
+</h4>
+
+<hr>
+
+<p id="modalInfos"></p>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+<div class="dashboard-card">
+
+<h4>
+Contact
+</h4>
+
+<hr>
+
+<p id="modalEmail"></p>
+
+<p id="modalTelephone"></p>
+
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+<div class="dashboard-card">
+
+<h4>
+Informations pratiques
+</h4>
+
+<hr>
+
+<p>
+
+Taille :
+
+<span id="modalTshirt"></span>
+
+</p>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+<div class="dashboard-card">
+
+<h4>
+Choix bénévole
+</h4>
+
+<hr>
+
+<p id="modalChoix"></p>
+
+
+</div>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="dashboard-card mt-4">
+
+
+<h4>
+Notes internes
+</h4>
+
+
+<hr>
+
+
+<textarea
+
+id="modalNotes"
+
+class="form-control"
+
+rows="4"
+
+placeholder="Ajouter une note interne...">
+
+</textarea>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- ACTIONS -->
+
+
+<div class="modal-footer mt-4">
+
+
+<button
+
+type="button"
+
+class="btn btn-secondary"
+
+data-bs-dismiss="modal">
+
+Fermer
+
+</button>
+
+
+
+
+
+<button
+
+id="btnAttente"
+
+type="button"
+
+class="btn btn-warning"
+
+onclick="mettreEnAttente()">
+
+🟡 Mettre en attente
+
+</button>
+
+
+
+
+
+<button
+
+id="btnRefus"
+
+type="button"
+
+class="btn btn-danger"
+
+onclick="refuserBenevole()">
+
+🔴 Refuser
+
+</button>
+
+
+
+
+
+
+
+<button
+
+id="btnValider"
+
+type="button"
+
+class="btn btn-success"
+
+onclick="validerBenevole()">
+
+✅ Valider et affecter
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
