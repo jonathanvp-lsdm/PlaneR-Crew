@@ -1,207 +1,144 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <base target="_top">
-  <script>
-    let volunteers = [];
-    let volunteerActuel = null;
-    let pageLoadToken = 0;
-    let pageLoading = false;
-    const pageCache = {};
+let volunteers = [];
+let volunteerActuel = null;
+let pageLoadToken = 0;
+let pageLoading = false;
 
-    function setActiveSidebar(page) {
-      document.querySelectorAll('.sidebar li[data-page]').forEach(li => {
-        li.classList.toggle('active', li.getAttribute('data-page') === page);
-      });
+const pageCache = {};
+
+function setActiveSidebar(page) {
+  document.querySelectorAll(".sidebar li[data-page]").forEach(li => {
+    li.classList.toggle(
+      "active",
+      li.dataset.page === page
+    );
+  });
+}
+
+function safeGetEl(id) {
+  return document.getElementById(id);
+}
+
+function loadPage(page) {
+
+  const token = ++pageLoadToken;
+
+  pageLoading = true;
+
+  setActiveSidebar(page);
+
+  const container = safeGetEl("page-content");
+
+  if (!container) return;
+
+  container.innerHTML = "<div class='p-4'>Chargement...</div>";
+
+  if (pageCache[page]) {
+
+    container.innerHTML = pageCache[page];
+
+    pageLoading = false;
+
+    if (page === "inscriptions") {
+
+      requestAnimationFrame(loadCandidatures);
+
     }
 
-    function safeGetEl(id) {
-      return document.getElementById(id);
-    }
+    return;
 
-    function loadPage(page) {
-      const token = ++pageLoadToken;
-      pageLoading = true;
-      setActiveSidebar(page);
+  }
 
-      const container = safeGetEl('page-content');
-      if (!container) return;
-      container.innerHTML = '<div class="p-4">Chargement...</div>';
+  google.script.run
 
-      if (pageCache[page]) {
-        container.innerHTML = pageCache[page];
-        pageLoading = false;
-        if (page === 'inscriptions') {
-          requestAnimationFrame(() => loadCandidatures());
-        }
-        return;
-      }
+    .withSuccessHandler(function(html){
 
-      google.script.run
-        .withSuccessHandler(function (html) {
-          if (token !== pageLoadToken) return;
-          pageCache[page] = html;
-          container.innerHTML = html;
-          pageLoading = false;
-          if (page === 'inscriptions') {
-            requestAnimationFrame(() => loadCandidatures());
-          }
-        })
-        .withFailureHandler(function (error) {
-          if (token !== pageLoadToken) return;
-          pageLoading = false;
-          container.innerHTML = '<div class="alert alert-danger m-4">Erreur de chargement de la page.</div>';
-          console.error('Erreur chargement page :', error);
-        })
-        .loadPage(page);
-    }
+      if(token !== pageLoadToken) return;
 
-    function loadCandidatures() {
-      const container = safeGetEl('volunteers-container');
-      if (!container) return;
+      pageCache[page] = html;
 
-      container.innerHTML = '<div class="col-12"><div class="dashboard-card">Chargement des candidatures...</div></div>';
-
-      google.script.run
-        .withSuccessHandler(function (data) {
-          volunteers = Array.isArray(data) ? data : [];
-          renderVolunteers();
-        })
-        .withFailureHandler(function (error) {
-          console.error(error);
-          container.innerHTML = '<div class="col-12"><div class="alert alert-danger">Erreur de chargement des candidatures.</div></div>';
-        })
-        .getBenevoles();
-    }
-
-    function statutToClass(statut) {
-      const s = String(statut || 'A_TRAITER').trim().toUpperCase();
-      if (s === 'VALIDE' || s === 'VALIDÉ') return 'valide';
-      if (s === 'REFUSE' || s === 'REFUSÉ') return 'refuse';
-      return 'attente';
-    }
-
-    function renderVolunteers() {
-      const container = safeGetEl('volunteers-container');
-      if (!container) return;
-
-      if (!volunteers.length) {
-        container.innerHTML = '<div class="col-12"><div class="dashboard-card">Aucune candidature à afficher.</div></div>';
-        return;
-      }
-
-      let html = '';
-      volunteers.forEach(function (v) {
-        const statut = String(v.STATUT || 'A_TRAITER').trim().toUpperCase();
-        const classeStatut = statutToClass(statut);
-        const id = v.ID || v.ID_BENEVOLE || '';
-        html += `
-          <div class="col-lg-4">
-            <div class="volunteer-card">
-              <div class="volunteer-status ${classeStatut}">${statut}</div>
-              <h3>${v.PRENOM || ''} ${v.NOM || ''}</h3>
-              <p>${v.EMAIL || ''}</p>
-              <p>Choix : ${v.CHOIX_1 || ''}${v.CHOIX_2 ? ' • ' + v.CHOIX_2 : ''}</p>
-              <button class="btn btn-outline-dark" onclick="openVolunteer('${String(id).replace(/'/g, "\\'")}')">Voir la fiche</button>
-            </div>
-          </div>
-        `;
-      });
       container.innerHTML = html;
-    }
 
-    function openVolunteer(id) {
-      const v = volunteers.find(function (item) {
-        return String(item.ID || item.ID_BENEVOLE) === String(id);
-      });
-      if (!v) {
-        console.error('Candidat introuvable :', id);
-        return;
+      pageLoading = false;
+
+      if(page === "inscriptions"){
+
+        requestAnimationFrame(loadCandidatures);
+
       }
 
-      volunteerActuel = String(v.ID_BENEVOLE || v.ID || '').padStart(3, '0');
+    })
 
-      const modalName = safeGetEl('modalName');
-      const modalStatut = safeGetEl('modalStatut');
-      const modalInfos = safeGetEl('modalInfos');
-      const modalEmail = safeGetEl('modalEmail');
-      const modalTelephone = safeGetEl('modalTelephone');
-      const modalTshirt = safeGetEl('modalTshirt');
-      const modalChoix = safeGetEl('modalChoix');
-      const modalNotes = safeGetEl('modalNotes');
+    .withFailureHandler(function (error) {
 
-      if (modalName) modalName.textContent = `${v.PRENOM || ''} ${v.NOM || ''}`.trim();
-      if (modalStatut) modalStatut.innerHTML = `<span class="volunteer-status ${statutToClass(v.STATUT)}">${String(v.STATUT || 'A_TRAITER').trim().toUpperCase()}</span>`;
-      if (modalInfos) modalInfos.textContent = [v.PRENOM, v.NOM].filter(Boolean).join(' ') || '';
-      if (modalEmail) modalEmail.textContent = v.EMAIL || '';
-      if (modalTelephone) modalTelephone.textContent = v.TELEPHONE || '';
-      if (modalTshirt) modalTshirt.textContent = v.TAILLE_TSHIRT || '';
-      if (modalChoix) modalChoix.textContent = [v.CHOIX_1, v.CHOIX_2, v.CHOIX_3, v.CHOIX_4, v.CHOIX_5].filter(Boolean).join(' • ');
-      if (modalNotes) modalNotes.value = v.NOTES || '';
+  console.error("ERREUR APPS SCRIPT :", error);
 
-      const modalEl = safeGetEl('volunteerModal');
-      if (modalEl && window.bootstrap && bootstrap.Modal) {
-        bootstrap.Modal.getOrCreateInstance(modalEl).show();
-      }
-    }
+  alert(
+    "Erreur Apps Script :\n\n" +
+    JSON.stringify(error, null, 2)
+  );
 
-    function refreshInscriptionsAfterAction() {
-      loadCandidatures();
-      const modalEl = safeGetEl('volunteerModal');
-      if (modalEl && window.bootstrap && bootstrap.Modal) {
-        const modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-      }
-    }
+  container.innerHTML =
+    '<div class="alert alert-danger">' +
+    error.message +
+    '</div>';
 
-    function validerBenevole() {
-      if (!volunteerActuel) return;
-      google.script.run
-        .withSuccessHandler(function () {
-          refreshInscriptionsAfterAction();
-        })
-        .withFailureHandler(function (error) {
-          console.error(error);
-        })
-        .validerBenevoleComplet(volunteerActuel);
-    }
+})
 
-    function refuserBenevole() {
-      if (!volunteerActuel) return;
-      google.script.run
-        .withSuccessHandler(function () {
-          refreshInscriptionsAfterAction();
-        })
-        .withFailureHandler(function (error) {
-          console.error(error);
-        })
-        .updateStatutBenevole(volunteerActuel, 'REFUSE');
-    }
+    .loadPage(page);
 
-    function mettreEnAttente() {
-      if (!volunteerActuel) return;
-      google.script.run
-        .withSuccessHandler(function () {
-          refreshInscriptionsAfterAction();
-        })
-        .withFailureHandler(function (error) {
-          console.error(error);
-        })
-        .updateStatutBenevole(volunteerActuel, 'EN ATTENTE');
-    }
+}
 
-    window.loadPage = loadPage;
-    window.loadCandidatures = loadCandidatures;
-    window.openVolunteer = openVolunteer;
-    window.validerBenevole = validerBenevole;
-    window.refuserBenevole = refuserBenevole;
-    window.mettreEnAttente = mettreEnAttente;
+function loadCandidatures(){
 
-    document.addEventListener('DOMContentLoaded', function () {
-      loadPage('dashboard');
-    });
-  </script>
-</head>
-<body>
-</body>
-</html>
+  const container =
+    safeGetEl("volunteers-container");
+
+  if(!container) return;
+
+  container.innerHTML =
+    "<div class='col-12'><div class='dashboard-card'>Chargement...</div></div>";
+
+  google.script.run
+
+    .withSuccessHandler(function(data){
+
+      volunteers = Array.isArray(data)
+        ? data
+        : [];
+
+      renderVolunteers();
+
+    })
+
+    .withFailureHandler(function(err){
+
+      console.error(err);
+
+      container.innerHTML =
+        "<div class='alert alert-danger'>Erreur de chargement.</div>";
+
+    })
+
+    .getBenevoles();
+
+}
+
+function renderVolunteers() {
+
+  const container = safeGetEl("volunteers-container");
+
+  if (!container) return;
+
+  if (!volunteers || volunteers.length === 0) {
+
+    container.innerHTML = `
+      <div class="col-12">
+        <div class="dashboard-card">
+          Aucune candidature.
+        </div>
+      </div>
+    `;
+
+    return;
+
+  }

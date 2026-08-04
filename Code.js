@@ -20,15 +20,23 @@ function doGet() {
 
 }
 
+function testInclude() {
+
+  const txt = include("javascript");
+
+  Logger.log(txt.substring(0,500));
+
+}
 
 /* =====================================================
    INCLUSION HTML
 ===================================================== */
 
-function include(filename){
+function include(filename) {
 
   return HtmlService
-    .createHtmlOutputFromFile(filename)
+    .createTemplateFromFile(filename)
+    .evaluate()
     .getContent();
 
 }
