@@ -136,15 +136,14 @@ function updateStatutBenevole(idBenevole,statut){
 
 function validerEtAffecterBenevole(
   idBenevole,
-  idPole,
-  affectePar
+  idPole
 ){
 
   const resultat = enregistrerAffectation(
     idBenevole,
     idPole,
-    affectePar
-  );
+    getUtilisateurConnecte().nom,
+);
 
   if(!resultat.success){
     return resultat;

@@ -9,8 +9,7 @@
 
 function enregistrerAffectation(
     idBenevole,
-    idPole,
-    affectePar
+    idPole
 ){
 
     const ss =
@@ -151,7 +150,7 @@ function enregistrerAffectation(
 
         new Date(),
 
-        affectePar,
+        getUtilisateurConnecte().nom,
 
         "",
 
@@ -198,8 +197,7 @@ function testAffectation(){
 function reaffecterBenevole(
     affectationId,
     idBenevole,
-    idPole,
-    affectePar
+    idPole
 ){
 
     const ss =
@@ -250,7 +248,7 @@ function reaffecterBenevole(
 
         new Date(),
 
-        affectePar,
+        getUtilisateurConnecte().nom,
 
         "Réaffectation automatique",
 
