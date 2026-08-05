@@ -190,3 +190,86 @@ function testAffectation(){
     );
 
 }
+
+/* =====================================================
+   REAFFECTER UN BENEVOLE
+===================================================== */
+
+function reaffecterBenevole(
+    affectationId,
+    idBenevole,
+    idPole,
+    affectePar
+){
+
+    const ss =
+        SpreadsheetApp.getActiveSpreadsheet();
+
+    const sheet =
+        ss.getSheetByName("AFFECTATIONS");
+
+    if(!sheet){
+        throw new Error(
+            "Feuille AFFECTATIONS introuvable."
+        );
+    }
+
+    const data =
+        sheet.getDataRange().getValues();
+
+    /* Désactivation de l'ancienne affectation */
+
+    for(let i = 1; i < data.length; i++){
+
+        if(Number(data[i][0]) === Number(affectationId)){
+
+            sheet
+                .getRange(i + 1, 8)
+                .setValue("NON");
+
+            break;
+
+        }
+
+    }
+
+    /* Création de la nouvelle */
+
+    const nouvelId =
+        sheet.getLastRow() + 1;
+
+    sheet.appendRow([
+
+        nouvelId,
+
+        "2027",
+
+        "'" + String(idBenevole).padStart(3,"0"),
+
+        idPole,
+
+        new Date(),
+
+        affectePar,
+
+        "Réaffectation automatique",
+
+        "OUI"
+
+    ]);
+
+    validerBenevoleComplet(
+    idBenevole
+    );
+
+    return{
+
+        success:true,
+
+        code:"REAFFECTATION_OK",
+
+        message:"Réaffectation effectuée."
+
+    };
+
+}

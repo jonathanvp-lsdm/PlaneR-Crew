@@ -7,6 +7,7 @@
 let volunteers = [];
 let volunteerActuel = null;
 let volunteerModal = null;
+const UTILISATEUR = "Jonathan";
 
 function loadCandidatures() {
 
@@ -191,6 +192,7 @@ function createVolunteerCard(v) {
 
 }
 
+
 /* =====================================================
    OUVERTURE DE LA FICHE BENEVOLE
 ===================================================== */
@@ -198,81 +200,107 @@ function createVolunteerCard(v) {
 function ouvrirFiche(id){
 
     volunteerActuel =
-        volunteers.find(v => String(v.ID) === String(id));
+        volunteers.find(
+            v => String(v.ID) === String(id)
+        );
 
     if(!volunteerActuel){
-    alert("Bénévole introuvable.");
-    return;
-}
 
-/* Avatar + ID */
+        alert("Bénévole introuvable.");
 
-console.log("ID :", volunteerActuel.ID);
+        return;
 
-const idElt = document.getElementById("modalId");
+    }
 
-console.log("Element modalId :", idElt);
+    /* ==========================================
+       EN-TETE
+    ========================================== */
 
-if(idElt){
-    idElt.textContent = volunteerActuel.ID;
-}
-
-document.getElementById("modalAvatar").textContent =
-    (volunteerActuel.PRENOM || "").substring(0,1) +
-    (volunteerActuel.NOM || "").substring(0,1);
-
-document.getElementById("modalName").textContent =
-    `${volunteerActuel.PRENOM} ${volunteerActuel.NOM}`;
+    document.getElementById("modalAvatar").textContent =
+        (volunteerActuel.PRENOM || "").substring(0,1) +
+        (volunteerActuel.NOM || "").substring(0,1);
 
     document.getElementById("modalName").textContent =
         `${volunteerActuel.PRENOM} ${volunteerActuel.NOM}`;
+
+    document.getElementById("modalId").textContent =
+        "ID " + volunteerActuel.ID;
 
     document.getElementById("modalStatut").innerHTML =
         `<span class="badge ${statutToClass(volunteerActuel.STATUT)}">
             ${volunteerActuel.STATUT}
         </span>`;
 
+    /* ==========================================
+       INFORMATIONS
+    ========================================== */
+
     document.getElementById("modalInfos").innerHTML = `
-        <b>ID :</b> ${volunteerActuel.ID}<br>
-        <b>Date de naissance :</b> ${volunteerActuel.DATE_NAISSANCE || "-"}<br>
-        <b>Ville :</b> ${volunteerActuel.VILLE || "-"}
+
+        <b>Date de naissance :</b>
+        ${volunteerActuel.DATE_NAISSANCE || "-"}<br>
+
+        <b>Ville :</b>
+        ${volunteerActuel.VILLE || "-"}<br>
+
+        <b>Code postal :</b>
+        ${volunteerActuel.CODE_POSTAL || "-"}
+
     `;
 
-document.getElementById("modalEmail").innerHTML = `
-    <div class="contact-line">
-        <span class="contact-icon">📧</span>
-        <span>${volunteerActuel.EMAIL || "-"}</span>
-    </div>
-`;
+    document.getElementById("modalEmail").innerHTML =
 
-document.getElementById("modalTelephone").innerHTML = `
-    <div class="contact-line">
-        <span class="contact-icon">📱</span>
-        <span>${volunteerActuel.TELEPHONE || "-"}</span>
-    </div>
-`;
+        `📧 ${volunteerActuel.EMAIL || "-"}`;
+
+    document.getElementById("modalTelephone").innerHTML =
+
+        `📱 ${volunteerActuel.TELEPHONE || "-"}`;
 
     document.getElementById("modalTshirt").textContent =
         volunteerActuel.TAILLE_TSHIRT || "-";
 
     document.getElementById("modalChoix").innerHTML = `
+
         1. ${volunteerActuel.CHOIX_1 || "-"}<br>
         2. ${volunteerActuel.CHOIX_2 || "-"}<br>
         3. ${volunteerActuel.CHOIX_3 || "-"}
+
     `;
 
     document.getElementById("modalNotes").value =
         volunteerActuel.NOTES || "";
 
-   volunteerModal =
-    new bootstrap.Modal(
-        document.getElementById("volunteerModal")
-    );
+    /* ==========================================
+       REMISE A ZERO DU BLOC AFFECTATION
+    ========================================== */
 
-volunteerModal.show();
+    annulerAffectation();
+
+    const select =
+        document.getElementById("affectationPole");
+
+    if(select){
+
+        select.value = "";
+
+    }
+
+    /* ==========================================
+       OUVERTURE MODALE
+    ========================================== */
+
+    if(!volunteerModal){
+
+        volunteerModal =
+            new bootstrap.Modal(
+                document.getElementById("volunteerModal")
+            );
+
+    }
+
+    volunteerModal.show();
 
 }
-
 /* =====================================================
    CHARGEMENT DES POLES
 ===================================================== */
@@ -330,7 +358,6 @@ function chargerPoles(){
 
 function validerBenevole(){
 
-    console.log("JE SUIS DANS validerBenevole()");
 
     if(!volunteerActuel){
         return;
@@ -366,6 +393,10 @@ function annulerAffectation(){
    CONFIRMER L'AFFECTATION
 ===================================================== */
 
+/* =====================================================
+   CONFIRMER L'AFFECTATION
+===================================================== */
+
 function confirmerAffectation(){
 
     if(!volunteerActuel){
@@ -375,7 +406,7 @@ function confirmerAffectation(){
     const select =
         document.getElementById("affectationPole");
 
-    if(!select.value){
+    if(!select || !select.value){
 
         alert("Veuillez sélectionner un pôle.");
 
@@ -385,38 +416,145 @@ function confirmerAffectation(){
 
     google.script.run
 
-.withSuccessHandler(function(resultat){
+        .withSuccessHandler(function(resultat){
 
-    if(resultat && resultat.dejaAffecte){
+            /* ==========================================
+               BENEVOLE DEJA AFFECTE
+            ========================================== */
 
-        document.getElementById("reaffectationTexte").innerHTML = `
-            <p><strong>${resultat.benevole.prenom} ${resultat.benevole.nom}</strong></p>
-            <p>est actuellement affecté à :</p>
-            <p class="fs-5">${resultat.ancienPole.icone} <strong>${resultat.ancienPole.nom}</strong></p>
-            <p>Souhaitez-vous le réaffecter vers le pôle sélectionné ?</p>
-        `;
+            if(resultat && resultat.dejaAffecte){
 
-        new bootstrap.Modal(
-            document.getElementById("reaffectationModal")
-        ).show();
+                document.getElementById(
+                    "reaffectationTexte"
+                ).innerHTML = `
 
-        return;
-    }
+                    <p>
 
-    annulerAffectation();
+                        <strong>
 
-    if(volunteerModal){
-        volunteerModal.hide();
-    }
+                            ${resultat.benevole.prenom}
+                            ${resultat.benevole.nom}
 
-    loadCandidatures();
+                        </strong>
 
-    showToast(
-        "success",
-        "Bénévole validé et affecté avec succès."
-    );
+                    </p>
 
-})
+                    <p>
+
+                        est déjà affecté à :
+
+                    </p>
+
+                    <p class="fs-5">
+
+                        ${resultat.ancienPole.icone}
+                        <strong>
+                            ${resultat.ancienPole.nom}
+                        </strong>
+
+                    </p>
+
+                    <p>
+
+                        Voulez-vous le désaffecter de ce pôle afin de pouvoir le réaffecter ici ?
+
+                    </p>
+
+                `;
+
+                const btn =
+                    document.getElementById(
+                        "btnConfirmerReaffectation"
+                    );
+
+                btn.onclick = function(){
+
+                    google.script.run
+
+                        .withSuccessHandler(function(){
+
+                            const modalReaff =
+                                bootstrap.Modal.getInstance(
+                                    document.getElementById(
+                                        "reaffectationModal"
+                                    )
+                                );
+
+                            if(modalReaff){
+                                modalReaff.hide();
+                            }
+
+                            annulerAffectation();
+
+                            if(volunteerModal){
+                                volunteerModal.hide();
+                            }
+
+                            loadCandidatures();
+
+                            showToast(
+
+                                "success",
+
+                                "Bénévole réaffecté avec succès."
+
+                            );
+
+                        })
+
+                        .withFailureHandler(function(err){
+
+                            alert(err.message);
+
+                        })
+
+                        .reaffecterBenevole(
+
+                            resultat.affectationId,
+
+                            volunteerActuel.ID,
+
+                            select.value,
+
+                            "UTILISATEUR"
+
+                        );
+
+                };
+
+                new bootstrap.Modal(
+
+                    document.getElementById(
+                        "reaffectationModal"
+                    )
+
+                ).show();
+
+                return;
+
+            }
+
+            /* ==========================================
+               AFFECTATION NORMALE
+            ========================================== */
+
+            annulerAffectation();
+
+            if(volunteerModal){
+                volunteerModal.hide();
+            }
+
+            loadCandidatures();
+
+            showToast(
+
+                "success",
+
+                "Bénévole validé et affecté avec succès."
+
+            );
+
+        })
 
         .withFailureHandler(function(err){
 
@@ -424,11 +562,15 @@ function confirmerAffectation(){
 
         })
 
-      .validerEtAffecterBenevole(
-    volunteerActuel.ID,
-    select.value,
-    "Jonathan"
-);
+        .validerEtAffecterBenevole(
+
+            volunteerActuel.ID,
+
+            select.value,
+
+            "UTILISATEUR"
+
+        );
 
 }
 
@@ -442,8 +584,8 @@ function refuserBenevole(){
 
             volunteerActuel.STATUT = "REFUSE";
 
-            document.getElementById("modalStatut").innerHTML =
-                `<span class="badge badge-danger">REFUSE</span>`;
+document.getElementById("modalStatut").innerHTML =
+                `<span class="badge bg-danger">REFUSE</span>`;
 
             loadCandidatures();
 
@@ -474,7 +616,7 @@ function mettreEnAttente(){
             volunteerActuel.STATUT = "ATTENTE";
 
             document.getElementById("modalStatut").innerHTML =
-                `<span class="badge badge-warning">ATTENTE</span>`;
+                `<span class="badge bg-warning text-dark">ATTENTE</span>`;
 
             loadCandidatures();
 

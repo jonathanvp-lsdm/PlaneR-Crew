@@ -140,20 +140,23 @@ function validerEtAffecterBenevole(
   affectePar
 ){
 
-  enregistrerAffectation(
+  const resultat = enregistrerAffectation(
     idBenevole,
     idPole,
     affectePar
   );
 
+  if(!resultat.success){
+    return resultat;
+  }
+
   validerBenevoleComplet(
     idBenevole
   );
 
-  return true;
+  return resultat;
 
 }
-
 /* =====================================================
    TEST
 ===================================================== */
