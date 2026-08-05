@@ -1,9 +1,11 @@
-let volunteers = [];
-let volunteerActuel = null;
-let pageLoadToken = 0;
-let pageLoading = false;
+console.log("VERSION JAVASCRIPT DU FICHIER : 04/08 18h");
 
+let pageLoadToken = 0;
 const pageCache = {};
+
+function safeGetEl(id) {
+  return document.getElementById(id);
+}
 
 function setActiveSidebar(page) {
   document.querySelectorAll(".sidebar li[data-page]").forEach(li => {
@@ -14,35 +16,39 @@ function setActiveSidebar(page) {
   });
 }
 
-function safeGetEl(id) {
-  return document.getElementById(id);
-}
-
 function loadPage(page) {
 
   const token = ++pageLoadToken;
-
-  pageLoading = true;
-
-  setActiveSidebar(page);
 
   const container = safeGetEl("page-content");
 
   if (!container) return;
 
-  container.innerHTML = "<div class='p-4'>Chargement...</div>";
+  setActiveSidebar(page);
+
+  container.innerHTML = `
+    <div class="p-4">
+      Chargement...
+    </div>
+  `;
 
   if (pageCache[page]) {
 
     container.innerHTML = pageCache[page];
 
-    pageLoading = false;
-
-    if (page === "inscriptions") {
-
-      requestAnimationFrame(loadCandidatures);
-
+    if (
+      page === "inscriptions" &&
+      typeof loadCandidatures === "function"
+    ) {
+      loadCandidatures();
     }
+
+    if (
+      page === "Equipes" &&
+      typeof loadEquipes === "function"
+    ) {
+      loadEquipes();
+}
 
     return;
 
@@ -58,55 +64,19 @@ function loadPage(page) {
 
       container.innerHTML = html;
 
-      pageLoading = false;
-
-      if(page === "inscriptions"){
-
-        requestAnimationFrame(loadCandidatures);
-
+      if (
+        page === "inscriptions" &&
+        typeof loadCandidatures === "function"
+      ) {
+        loadCandidatures();
       }
 
-    })
-
-    .withFailureHandler(function (error) {
-
-  console.error("ERREUR APPS SCRIPT :", error);
-
-  alert(
-    "Erreur Apps Script :\n\n" +
-    JSON.stringify(error, null, 2)
-  );
-
-  container.innerHTML =
-    '<div class="alert alert-danger">' +
-    error.message +
-    '</div>';
-
-})
-
-    .loadPage(page);
-
+      if (
+        page === "Equipes" &&
+        typeof loadEquipes === "function"
+      ) {
+        loadEquipes();
 }
-
-function loadCandidatures(){
-
-  const container =
-    safeGetEl("volunteers-container");
-
-  if(!container) return;
-
-  container.innerHTML =
-    "<div class='col-12'><div class='dashboard-card'>Chargement...</div></div>";
-
-  google.script.run
-
-    .withSuccessHandler(function(data){
-
-      volunteers = Array.isArray(data)
-        ? data
-        : [];
-
-      renderVolunteers();
 
     })
 
@@ -114,31 +84,25 @@ function loadCandidatures(){
 
       console.error(err);
 
-      container.innerHTML =
-        "<div class='alert alert-danger'>Erreur de chargement.</div>";
+      container.innerHTML = `
+        <div class="alert alert-danger m-4">
+          Erreur de chargement de la page.
+        </div>
+      `;
 
     })
 
-    .getBenevoles();
+    .loadPage(page);
 
 }
 
-function renderVolunteers() {
+window.loadPage = loadPage;
 
-  const container = safeGetEl("volunteers-container");
+<?!= include("InscriptionsClient"); ?>
+<?!= include("EquipesClient"); ?>
 
-  if (!container) return;
+document.addEventListener("DOMContentLoaded", function(){
 
-  if (!volunteers || volunteers.length === 0) {
+  loadPage("dashboard");
 
-    container.innerHTML = `
-      <div class="col-12">
-        <div class="dashboard-card">
-          Aucune candidature.
-        </div>
-      </div>
-    `;
-
-    return;
-
-  }
+});

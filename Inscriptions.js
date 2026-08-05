@@ -84,8 +84,8 @@ function creerCandidatureBenevole(donnees){
     sheetBenevoles.getRange(ligneBenevole,colEdition+1)
       .setValue(donnees.ID_EDITION || "");
 
-    sheetBenevoles.getRange(ligneBenevolenevole,colStatut+1)
-      .setValue("A_TRAITER");
+   sheetBenevoles.getRange(ligneBenevole, colStatut + 1)
+  .setValue("A_TRAITER"); 
 
     sheetBenevoles.getRange(ligneBenevole,colDate+1)
       .setValue(new Date());

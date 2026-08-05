@@ -1,0 +1,290 @@
+/* =====================================================
+   MODULE EQUIPES
+===================================================== */
+
+function loadEquipes(){
+
+    google.script.run
+
+        .withSuccessHandler(afficherEquipes)
+
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+        })
+
+        .getEquipes();
+
+}
+
+
+/* =====================================================
+   AFFICHAGE
+===================================================== */
+
+function afficherEquipes(equipes){
+
+    const container =
+        document.getElementById("equipes-container");
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    /* ============================================
+       TRI DES EQUIPES
+    ============================================ */
+
+    equipes.sort(function(a,b){
+
+        const tauxA =
+            a.nbBenevoles > 0
+                ? a.nbAffectes / a.nbBenevoles
+                : 0;
+
+        const tauxB =
+            b.nbBenevoles > 0
+                ? b.nbAffectes / b.nbBenevoles
+                : 0;
+
+        if(tauxA !== tauxB){
+            return tauxA - tauxB;
+        }
+
+        const resteA =
+            Math.max(
+                0,
+                a.nbBenevoles - a.nbAffectes
+            );
+
+        const resteB =
+            Math.max(
+                0,
+                b.nbBenevoles - b.nbAffectes
+            );
+
+        if(resteA !== resteB){
+            return resteB - resteA;
+        }
+
+        return a.ordre - b.ordre;
+
+    });
+
+    /* ============================================
+       CARTES
+    ============================================ */
+
+    equipes.forEach(function(equipe){
+
+        const pourcentage =
+            equipe.nbBenevoles > 0
+                ? Math.round(
+                    (equipe.nbAffectes / equipe.nbBenevoles) * 100
+                  )
+                : 0;
+
+        const restant =
+            Math.max(
+                0,
+                equipe.nbBenevoles - equipe.nbAffectes
+            );
+
+        let couleurBarre = "bg-danger";
+
+        if(pourcentage >= 75){
+            couleurBarre = "bg-warning";
+        }
+
+        if(pourcentage >= 100){
+            couleurBarre = "bg-success";
+        }
+
+        const indicateur =
+            restant === 0
+                ? "✔ Complet"
+                : restant + " restant" + (restant > 1 ? "s" : "");
+
+        const carteComplete =
+            restant === 0
+                ? "border border-success border-3"
+                : "";
+
+        container.innerHTML += `
+
+        <div class="col-md-6 col-xl-4">
+
+            <div
+                class="card shadow-sm h-100 ${carteComplete}"
+                style="cursor:pointer;"
+                onclick="ouvrirEquipe(${equipe.id})">
+
+                <div
+                    class="card-header text-white d-flex justify-content-between align-items-center"
+                    style="background:${equipe.couleur};">
+
+                    <h5 class="mb-0">
+
+                        ${equipe.icone}
+                        ${equipe.nom}
+
+                    </h5>
+
+                    <small class="fw-bold">
+
+                        ${indicateur}
+
+                    </small>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>
+
+                        ${equipe.nbAffectes}
+                        /
+                        ${equipe.nbBenevoles}
+
+                    </h3>
+
+                    <p class="text-muted">
+
+                        bénévoles affectés
+
+                    </p>
+
+                    <p class="fw-semibold mb-3">
+
+                        ${
+                            restant === 0
+                                ? "✅ Équipe complète"
+                                : "👤 Il reste " +
+                                  restant +
+                                  " bénévole" +
+                                  (restant > 1 ? "s" : "") +
+                                  " à affecter"
+                        }
+
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+
+                        <small class="text-muted">
+
+                            Progression
+
+                        </small>
+
+                        <small class="fw-bold">
+
+                            ${pourcentage}%
+
+                        </small>
+
+                    </div>
+
+                    <div class="progress" style="height:10px;">
+
+                        <div
+                            class="progress-bar ${couleurBarre}"
+                            role="progressbar"
+                            style="width:${pourcentage}%">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+   OUVRIR UNE EQUIPE
+===================================================== */
+
+function ouvrirEquipe(idEquipe){
+
+    const titre =
+        document.getElementById("equipeTitre");
+
+    const contenu =
+        document.getElementById("equipeContenu");
+
+    if(titre){
+
+        titre.innerHTML =
+            "Chargement...";
+
+    }
+
+    if(contenu){
+
+        contenu.innerHTML = `
+
+            <div class="text-center p-5">
+
+                <div class="spinner-border text-primary mb-3"></div>
+
+                <p>Chargement de l'équipe...</p>
+
+            </div>
+
+        `;
+
+    }
+
+    const modal =
+        new bootstrap.Modal(
+            document.getElementById("equipeModal")
+        );
+
+    modal.show();
+
+    google.script.run
+
+        .withSuccessHandler(function(equipe){
+
+            afficherEquipe(equipe);
+
+        })
+
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+            contenu.innerHTML = `
+
+                <div class="alert alert-danger">
+
+                    ${err.message}
+
+                </div>
+
+            `;
+
+        })
+
+        .getEquipe(idEquipe);
+
+}
+
+/* =====================================================
+   AFFICHER UNE EQUIPE
+===================================================== */
+
+function afficherEquipe(equipe){
+
+    console.log(equipe);
+
+}

@@ -132,7 +132,7 @@ function testDeploiement(){
    TEST PING
 ===================================================== */
 
-function ping(){
+function pingServeur(){
 
   return "PONG";
 

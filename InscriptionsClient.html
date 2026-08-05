@@ -1,0 +1,576 @@
+/* =====================================================
+   PLANE'R CREW
+   CLIENT INSCRIPTIONS
+   VERSION M2.1
+===================================================== */
+
+let volunteers = [];
+let volunteerActuel = null;
+let volunteerModal = null;
+
+function loadCandidatures() {
+
+    const container =
+        document.getElementById("volunteers-container");
+
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="col-12">
+            <div class="dashboard-card">
+                Chargement des candidatures...
+            </div>
+        </div>
+    `;
+
+    google.script.run
+
+        .withSuccessHandler(function (data) {
+
+            volunteers = Array.isArray(data)
+                ? data
+                : [];
+
+            renderVolunteers();
+
+        })
+
+        .withFailureHandler(function (err) {
+
+            console.error(err);
+
+            container.innerHTML = `
+                <div class="alert alert-danger">
+                    Impossible de charger les candidatures.
+                </div>
+            `;
+
+        })
+
+        .getBenevoles();
+
+}
+
+
+
+function statutToClass(statut) {
+
+    statut = String(statut || "").toUpperCase();
+
+    if (statut.includes("VALID"))
+        return "bg-success";
+
+    if (statut.includes("REFUS"))
+        return "bg-danger";
+
+    if (statut.includes("ATTENTE"))
+        return "bg-warning text-dark";
+
+    return "bg-secondary";
+
+}
+
+
+
+function renderVolunteers() {
+
+    const container =
+        document.getElementById("volunteers-container");
+
+    if (!container)
+        return;
+
+    if (volunteers.length === 0) {
+
+        container.innerHTML = `
+            <div class="col-12">
+                <div class="dashboard-card">
+                    Aucun bénévole.
+                </div>
+            </div>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    volunteers.forEach(function (v) {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "col-xl-4 col-lg-6";
+
+        card.innerHTML = createVolunteerCard(v);
+
+        container.appendChild(card);
+
+    });
+
+}
+
+/* =====================================================
+   CREATION D'UNE CARTE BENEVOLE
+===================================================== */
+
+function createVolunteerCard(v) {
+
+    return `
+
+        <div class="dashboard-card volunteer-card">
+
+            <div class="d-flex justify-content-between align-items-start mb-3">
+
+                <div>
+
+                    <h4 class="mb-1">
+
+                        ${v.PRENOM} ${v.NOM}
+
+                    </h4>
+
+                    <small class="text-muted">
+
+                        ID ${v.ID}
+
+                    </small>
+
+                </div>
+
+                <span class="badge ${statutToClass(v.STATUT)}">
+
+                    ${v.STATUT}
+
+                </span>
+
+            </div>
+
+
+            <p>
+
+                📧 ${v.EMAIL || "-"}
+
+            </p>
+
+            <p>
+
+                📞 ${v.TELEPHONE || "-"}
+
+            </p>
+
+            <p>
+
+                👕 Taille : ${v.TAILLE_TSHIRT || "-"}
+
+            </p>
+
+            <p>
+
+                ⭐ Choix :
+
+                ${v.CHOIX_1 || "-"}
+
+            </p>
+
+
+            <button
+
+                class="btn btn-primary w-100"
+
+                onclick="ouvrirFiche('${v.ID}')">
+
+                Voir la fiche
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+/* =====================================================
+   OUVERTURE DE LA FICHE BENEVOLE
+===================================================== */
+
+function ouvrirFiche(id){
+
+    volunteerActuel =
+        volunteers.find(v => String(v.ID) === String(id));
+
+    if(!volunteerActuel){
+    alert("Bénévole introuvable.");
+    return;
+}
+
+/* Avatar + ID */
+
+console.log("ID :", volunteerActuel.ID);
+
+const idElt = document.getElementById("modalId");
+
+console.log("Element modalId :", idElt);
+
+if(idElt){
+    idElt.textContent = volunteerActuel.ID;
+}
+
+document.getElementById("modalAvatar").textContent =
+    (volunteerActuel.PRENOM || "").substring(0,1) +
+    (volunteerActuel.NOM || "").substring(0,1);
+
+document.getElementById("modalName").textContent =
+    `${volunteerActuel.PRENOM} ${volunteerActuel.NOM}`;
+
+    document.getElementById("modalName").textContent =
+        `${volunteerActuel.PRENOM} ${volunteerActuel.NOM}`;
+
+    document.getElementById("modalStatut").innerHTML =
+        `<span class="badge ${statutToClass(volunteerActuel.STATUT)}">
+            ${volunteerActuel.STATUT}
+        </span>`;
+
+    document.getElementById("modalInfos").innerHTML = `
+        <b>ID :</b> ${volunteerActuel.ID}<br>
+        <b>Date de naissance :</b> ${volunteerActuel.DATE_NAISSANCE || "-"}<br>
+        <b>Ville :</b> ${volunteerActuel.VILLE || "-"}
+    `;
+
+document.getElementById("modalEmail").innerHTML = `
+    <div class="contact-line">
+        <span class="contact-icon">📧</span>
+        <span>${volunteerActuel.EMAIL || "-"}</span>
+    </div>
+`;
+
+document.getElementById("modalTelephone").innerHTML = `
+    <div class="contact-line">
+        <span class="contact-icon">📱</span>
+        <span>${volunteerActuel.TELEPHONE || "-"}</span>
+    </div>
+`;
+
+    document.getElementById("modalTshirt").textContent =
+        volunteerActuel.TAILLE_TSHIRT || "-";
+
+    document.getElementById("modalChoix").innerHTML = `
+        1. ${volunteerActuel.CHOIX_1 || "-"}<br>
+        2. ${volunteerActuel.CHOIX_2 || "-"}<br>
+        3. ${volunteerActuel.CHOIX_3 || "-"}
+    `;
+
+    document.getElementById("modalNotes").value =
+        volunteerActuel.NOTES || "";
+
+   volunteerModal =
+    new bootstrap.Modal(
+        document.getElementById("volunteerModal")
+    );
+
+volunteerModal.show();
+
+}
+
+/* =====================================================
+   CHARGEMENT DES POLES
+===================================================== */
+
+function chargerPoles(){
+
+    google.script.run
+        .withSuccessHandler(function(poles){
+
+            const select =
+                document.getElementById("affectationPole");
+
+            if(!select) return;
+
+            select.innerHTML = "";
+
+            const optionVide =
+                document.createElement("option");
+
+            optionVide.value = "";
+            optionVide.textContent = "Choisir...";
+
+            select.appendChild(optionVide);
+
+            poles.forEach(function(pole){
+
+                const option =
+                    document.createElement("option");
+
+                option.value = pole.ID;
+
+                option.textContent =
+                    `${pole.ICONE} ${pole.NOM}`;
+
+                select.appendChild(option);
+
+            });
+
+        })
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+            alert(err.message);
+
+        })
+        .getPoles();
+
+}
+
+
+/* =====================================================
+   ACTIONS FICHE BENEVOLE
+===================================================== */
+
+function validerBenevole(){
+
+    console.log("JE SUIS DANS validerBenevole()");
+
+    if(!volunteerActuel){
+        return;
+    }
+
+    chargerPoles();
+
+    const bloc =
+        document.getElementById("blocAffectation");
+
+    if(bloc){
+        bloc.style.display = "block";
+    }
+
+}
+
+/* =====================================================
+   ANNULER AFFECTATION
+===================================================== */
+
+function annulerAffectation(){
+
+    const bloc =
+        document.getElementById("blocAffectation");
+
+    if(bloc){
+        bloc.style.display = "none";
+    }
+
+}   
+
+/* =====================================================
+   CONFIRMER L'AFFECTATION
+===================================================== */
+
+function confirmerAffectation(){
+
+    if(!volunteerActuel){
+        return;
+    }
+
+    const select =
+        document.getElementById("affectationPole");
+
+    if(!select.value){
+
+        alert("Veuillez sélectionner un pôle.");
+
+        return;
+
+    }
+
+    google.script.run
+
+.withSuccessHandler(function(resultat){
+
+    if(resultat && resultat.dejaAffecte){
+
+        document.getElementById("reaffectationTexte").innerHTML = `
+            <p><strong>${resultat.benevole.prenom} ${resultat.benevole.nom}</strong></p>
+            <p>est actuellement affecté à :</p>
+            <p class="fs-5">${resultat.ancienPole.icone} <strong>${resultat.ancienPole.nom}</strong></p>
+            <p>Souhaitez-vous le réaffecter vers le pôle sélectionné ?</p>
+        `;
+
+        new bootstrap.Modal(
+            document.getElementById("reaffectationModal")
+        ).show();
+
+        return;
+    }
+
+    annulerAffectation();
+
+    if(volunteerModal){
+        volunteerModal.hide();
+    }
+
+    loadCandidatures();
+
+    showToast(
+        "success",
+        "Bénévole validé et affecté avec succès."
+    );
+
+})
+
+        .withFailureHandler(function(err){
+
+            alert(err.message);
+
+        })
+
+      .validerEtAffecterBenevole(
+    volunteerActuel.ID,
+    select.value,
+    "Jonathan"
+);
+
+}
+
+
+function refuserBenevole(){
+
+    if(!volunteerActuel) return;
+
+    google.script.run
+        .withSuccessHandler(function(){
+
+            volunteerActuel.STATUT = "REFUSE";
+
+            document.getElementById("modalStatut").innerHTML =
+                `<span class="badge badge-danger">REFUSE</span>`;
+
+            loadCandidatures();
+
+            alert("🔴 Candidature refusée.");
+
+        })
+        .withFailureHandler(function(err){
+
+            alert(err.message);
+
+        })
+        .updateStatutBenevole(
+            volunteerActuel.ID,
+            "REFUSE"
+        );
+
+}
+
+
+
+function mettreEnAttente(){
+
+    if(!volunteerActuel) return;
+
+    google.script.run
+        .withSuccessHandler(function(){
+
+            volunteerActuel.STATUT = "ATTENTE";
+
+            document.getElementById("modalStatut").innerHTML =
+                `<span class="badge badge-warning">ATTENTE</span>`;
+
+            loadCandidatures();
+
+            alert("🟡 Candidature mise en attente.");
+
+        })
+        .withFailureHandler(function(err){
+
+            alert(err.message);
+
+        })
+        .updateStatutBenevole(
+            volunteerActuel.ID,
+            "ATTENTE"
+        );
+
+}
+
+/* =====================================================
+   TOAST CRM
+===================================================== */
+
+function showToast(type, message) {
+
+    const container = document.getElementById("toastContainer");
+
+    if (!container) return;
+
+    let color = "primary";
+
+    switch(type){
+
+        case "success":
+            color = "success";
+            break;
+
+        case "danger":
+            color = "danger";
+            break;
+
+        case "warning":
+            color = "warning";
+            break;
+
+        case "info":
+            color = "primary";
+            break;
+
+    }
+
+    const toast = document.createElement("div");
+
+    toast.className =
+        `toast align-items-center text-bg-${color} border-0 mb-3`;
+
+    toast.setAttribute("role","alert");
+
+    toast.innerHTML = `
+
+        <div class="d-flex">
+
+            <div class="toast-body">
+
+                ${message}
+
+            </div>
+
+            <button
+                type="button"
+                class="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast">
+                </button>
+
+            </div>
+
+        `;
+
+        container.appendChild(toast);
+
+        const bsToast =
+            new bootstrap.Toast(
+                toast,
+                {
+                    delay:3000
+                }
+            );
+
+        bsToast.show();
+
+        toast.addEventListener(
+            "hidden.bs.toast",
+            function(){
+
+                toast.remove();
+
+            }
+        );
+
+    }

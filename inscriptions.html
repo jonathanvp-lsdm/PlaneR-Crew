@@ -47,40 +47,31 @@
 
 
 
-<div class="modal-header">
+<div class="modal-header fiche-header">
 
+    <div class="d-flex align-items-center">
 
-<div>
+        <div id="modalAvatar"></div>
 
+        <div class="ms-4">
 
-<h2 id="modalName"></h2>
+            <h2 id="modalName"></h2>
 
+            <div id="modalId" class="fiche-id"></div>
 
-<div id="modalStatut" class="mt-2"></div>
+            <div id="modalStatut" class="mt-2"></div>
 
+        </div>
 
-</div>
+    </div>
 
-
-
-<button
-
-type="button"
-
-class="btn btn-outline-dark"
-
-data-bs-dismiss="modal"
-
-style="border-radius:50%; width:42px; height:42px; font-size:20px;">
-
-×
-
-</button>
-
+    <button
+        type="button"
+        class="btn-close btn-close-white-custom"
+        data-bs-dismiss="modal">
+    </button>
 
 </div>
-
-
 
 
 
@@ -94,10 +85,10 @@ style="border-radius:50%; width:42px; height:42px; font-size:20px;">
 
 <div class="col-md-6">
 
-<div class="dashboard-card">
+<div class="dashboard-card fiche-card">
 
 <h4>
-Informations personnelles
+👤 Informations personnelles
 </h4>
 
 <hr>
@@ -114,10 +105,10 @@ Informations personnelles
 
 <div class="col-md-6">
 
-<div class="dashboard-card">
+<div class="dashboard-card fiche-card">
 
 <h4>
-Contact
+📞 Contact
 </h4>
 
 <hr>
@@ -137,10 +128,10 @@ Contact
 
 <div class="col-md-6">
 
-<div class="dashboard-card">
+<div class="dashboard-card fiche-card">
 
 <h4>
-Informations pratiques
+👕 Informations pratiques
 </h4>
 
 <hr>
@@ -163,10 +154,10 @@ Taille :
 
 <div class="col-md-6">
 
-<div class="dashboard-card">
+<div class="dashboard-card fiche-card">
 
 <h4>
-Choix bénévole
+⭐ Choix bénévole
 </h4>
 
 <hr>
@@ -188,11 +179,11 @@ Choix bénévole
 
 
 
-<div class="dashboard-card mt-4">
+<div class="dashboard-card mt-4 fiche-card">
 
 
 <h4>
-Notes internes
+📝 Notes internes
 </h4>
 
 
@@ -216,7 +207,54 @@ placeholder="Ajouter une note interne...">
 </div>
 
 
+<!-- ==========================================
+     AFFECTATION
+========================================== -->
 
+<div
+    id="blocAffectation"
+    class="dashboard-card mt-4"
+    style="display:none;">
+
+    <h5 class="mb-3">
+        👥 Affectation
+    </h5>
+
+    <label class="form-label">
+        Pôle
+    </label>
+
+    <select
+        id="affectationPole"
+        class="form-select">
+
+        <option value="">
+            Choisir...
+        </option>
+
+    </select>
+
+    <div class="mt-3 text-end">
+
+        <button
+            class="btn btn-secondary"
+            onclick="annulerAffectation()">
+
+            Annuler
+
+        </button>
+
+        <button
+            class="btn btn-success"
+            onclick="confirmerAffectation()">
+
+            ✅ Affecter
+
+        </button>
+
+    </div>
+
+</div>
 
 
 
@@ -316,3 +354,87 @@ onclick="validerBenevole()">
 
 
 </div>
+
+<!-- ==========================================
+     TOAST CRM
+========================================== -->
+
+<div id="toastContainer"
+     class="toast-container position-fixed bottom-0 end-0 p-4"
+     style="z-index:9999;">
+</div>
+
+<!--
+
+==========================================
+     MODAL AFFECTATION
+==========================================
+
+<div class="modal fade" id="affectationModal" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h4 class="modal-title">
+                    👥 Affectation du bénévole
+                </h4>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Pôle
+                    </label>
+
+                    <select
+                        id="affectationPole"
+                        class="form-select">
+
+                        <option value="">Choisir...</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Annuler
+
+                </button>
+
+                <button
+                    id="btnConfirmerAffectation"
+                    class="btn btn-success"
+                    onclick="confirmerAffectation()">
+
+                    ✅ Affecter
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+-->
