@@ -89,7 +89,7 @@ function getData() {
      LISTE DES EDITIONS
   ===================================================== */
 
-  function getToutesLesEditions() {
+  function getEditions() {
 
     return getData();
 
@@ -224,10 +224,10 @@ function createEdition(data) {
      API PUBLIQUE
   ===================================================== */
 
- return {
+return {
 
   getEditionActive,
-  getToutesLesEditions,
+  getEditions,
   getEditionById,
 
   createEdition,

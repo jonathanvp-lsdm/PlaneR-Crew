@@ -155,34 +155,43 @@ function renderEditions(editions){
 
             },
 
-            {
-                field: "ACTIONS",
+{
+    field: "ACTIONS",
 
-                title: "Actions",
+    title: "Actions",
 
-                type: "actions",
+    type: "actions",
 
-                actions: [
+    actions: [
 
-                    "view",
+        {
+            type: "view",
+            onclick: "voirEdition"
+        },
 
-                    "edit",
+        {
+            type: "edit",
+            onclick: "modifierEdition"
+        },
 
-                    "delete"
+        {
+            type: "delete",
+            onclick: "supprimerEdition"
+        }
 
-                 ],
+    ],
 
-                align: "center",
+    align: "center",
 
-                width: "140px"
+    width: "140px"
 
-            }
+}
+    
+],
 
-        ],
+data: editions
 
-        data: editions
-
-    });
+});
 
     Core_ModalManager.open({
 
@@ -195,3 +204,147 @@ function renderEditions(editions){
     });
 
 } 
+
+/* =====================================================
+   VOIR UNE EDITION
+===================================================== */
+
+function voirEdition(id){
+
+    google.script.run
+
+        .withSuccessHandler(function(edition){
+
+            if(!edition){
+
+                alert("Édition introuvable.");
+
+                return;
+
+            }
+
+            afficherEdition(edition);
+
+        })
+
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+            alert(err.message);
+
+        })
+
+        .getEditionById(id);
+
+}
+
+/* =====================================================
+   MODIFIER UNE EDITION
+===================================================== */
+
+function modifierEdition(id){
+
+    google.script.run
+
+        .withSuccessHandler(function(edition){
+
+            if(!edition){
+
+                alert("Édition introuvable.");
+
+                return;
+
+            }
+
+            afficherEditionFormulaire(edition);
+
+        })
+
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+            alert(err.message);
+
+        })
+
+        .getEditionById(id);
+
+}
+
+/* =====================================================
+   SUPPRIMER UNE EDITION
+===================================================== */
+
+function supprimerEdition(id){
+
+    alert("Supprimer : " + id);
+
+}
+
+/* =====================================================
+   AFFICHER LE FORMULAIRE DE MODIFICATION
+===================================================== */
+function afficherEditionFormulaire(edition){
+
+    Core_ModalManager.open({
+
+        title: "Test",
+
+        body: "OK",
+
+        size: "md"
+
+    });
+
+}
+/* =====================================================
+   AFFICHER UNE EDITION
+===================================================== */
+
+function afficherEdition(edition){
+
+    const html = `
+
+<div class="container-fluid">
+
+    <div class="mb-3">
+
+        <strong>Nom</strong><br>
+
+        ${edition.NOM}
+
+    </div>
+
+    <div class="mb-3">
+
+        <strong>État</strong><br>
+
+        ${Core_Badge.editionState(edition.ETAT)}
+
+    </div>
+
+    <div class="mb-3">
+
+        <strong>Active</strong><br>
+
+        ${Core_Badge.boolean(edition.EST_ACTIVE)}
+
+    </div>
+
+</div>
+
+`;
+
+    Core_ModalManager.open({
+
+        title: edition.NOM,
+
+        body: html,
+
+        size: "md"
+
+    });
+
+}
