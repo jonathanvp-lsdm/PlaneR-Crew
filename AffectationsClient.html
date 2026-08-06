@@ -1,0 +1,204 @@
+console.log("AffectationsClient chargé");
+
+/* =====================================================
+   PLANE'R CREW
+   MODULE AFFECTATIONS
+===================================================== */
+
+let affectations = [];
+
+/* =====================================================
+   INITIALISATION
+===================================================== */
+
+console.log("AffectationsClient chargé");
+
+function testAffectations(){
+    console.log("La fonction existe");
+}
+
+
+/* =====================================================
+   CHARGER LES AFFECTATIONS
+===================================================== */
+
+function chargerAffectations(){
+
+    google.script.run
+    .withSuccessHandler(function(data){
+
+        console.log("Affectations :", data);
+
+        affectations = data;
+
+        renderAffectations();
+
+    })
+
+        .withFailureHandler(function(err){
+
+            alert(err.message);
+
+        })
+
+        .getAffectationsActives();
+
+}
+
+/* =====================================================
+   AFFICHAGE
+===================================================== */
+
+function renderAffectations(){
+
+    const container =
+        document.getElementById(
+            "listeAffectations"
+        );
+
+    if(!container){
+        return;
+    }
+
+    if(affectations.length === 0){
+
+    container.innerHTML = `
+
+    <tr>
+
+    <td colspan="5" class="text-center text-muted py-4">
+
+        Aucune affectation active.
+
+    </td>
+
+    </tr>
+
+    
+`;
+
+document.getElementById(
+    "nbAffectations"
+).textContent = "0";
+
+        return;
+
+    }
+
+    let html = "";
+
+    affectations.forEach(function(a){
+
+        html += renderLigne(a);
+
+    });
+
+document.getElementById(
+    "nbAffectations"
+).textContent = affectations.length;
+
+    container.innerHTML = html;
+
+}
+
+/* =====================================================
+   LIGNE
+===================================================== */
+
+function renderLigne(a){
+
+    return `
+
+    <tr>
+
+    <td>
+
+        ${a.nom}
+
+    </td>
+
+    <td>
+
+        ${a.pole}
+
+    </td>
+
+    <td>
+
+        ${a.affectePar}
+
+    </td>
+
+    <td>
+
+        ${a.date}
+
+    </td>
+
+    <td class="text-center">
+        <button
+                class="btn btn-outline-primary btn-sm"
+                onclick="voirAffectation(${a.id})">
+
+                <i class="fa-solid fa-eye"></i>
+
+        </button>
+
+    </td>
+
+</tr>
+
+`;
+
+}
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+function voirAffectation(id){
+
+    const affectation = affectations.find(
+        a => String(a.id) === String(id)
+    );
+
+    if(!affectation){
+        console.warn("Affectation introuvable :", id);
+        return;
+    }
+
+    Core_ModalManager.open({
+
+        title: "🎯 Fiche affectation",
+
+        body: renderFicheAffectation(affectation)
+
+    });
+
+}
+
+/* =====================================================
+   FICHE AFFECTATION
+===================================================== */
+
+function renderFicheAffectation(a){
+
+    return `
+
+        <div class="container-fluid">
+
+            <h4>${a.nom}</h4>
+
+            <hr>
+
+            <p><strong>Pôle :</strong> ${a.pole}</p>
+
+            <p><strong>Affecté par :</strong> ${a.affectePar}</p>
+
+            <p><strong>Date :</strong> ${a.date}</p>
+
+        </div>
+
+    `;
+
+}

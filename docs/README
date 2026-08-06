@@ -1,0 +1,167 @@
+# Plane'R Crew
+
+![Version](https://img.shields.io/badge/version-3.0-blue)
+![Apps Script](https://img.shields.io/badge/Google-Apps%20Script-green)
+![Status](https://img.shields.io/badge/status-En%20développement-orange)
+
+---
+
+# Présentation
+
+Plane'R Crew est un logiciel développé pour l'association **Les Sonorités de Montcul (LSDM)**.
+
+Son objectif est de gérer **l'ensemble du cycle de vie des bénévoles** du Plane'R Fest.
+
+Le logiciel est entièrement développé sous **Google Apps Script** avec une interface web moderne.
+
+---
+
+# Objectifs
+
+Plane'R Crew permet de :
+
+- Gérer les inscriptions
+- Centraliser les bénévoles
+- Valider les candidatures
+- Gérer les affectations
+- Constituer les équipes
+- Suivre les documents administratifs
+- Communiquer avec les bénévoles
+- Conserver l'historique des participations
+
+---
+
+# Hors périmètre
+
+Plane'R Crew ne gère pas :
+
+- les artistes
+- la programmation
+- la billetterie
+- les finances
+- les fournisseurs
+- les stocks
+- la logistique générale
+
+Ces fonctionnalités appartiennent à d'autres outils.
+
+---
+
+# Philosophie
+
+Le projet repose sur plusieurs principes :
+
+- simplicité d'utilisation
+- zéro manipulation directe des Google Sheets
+- architecture modulaire
+- composants réutilisables
+- respect du RGPD
+- évolutivité sur plusieurs années
+
+Voir :
+
+docs/CONSTITUTION_PLANE_R_CREW.md
+
+---
+
+# Architecture
+
+Le projet est organisé autour de plusieurs couches.
+
+Google Sheets
+
+↓
+
+Services
+
+↓
+
+Core
+
+↓
+
+Modules
+
+↓
+
+Interface utilisateur
+
+---
+
+# Modules
+
+Le CRM est composé actuellement de :
+
+- Dashboard
+- Inscriptions
+- Bénévoles
+- Affectations
+- Documents
+- Équipes
+- Communication
+- Rapports
+- Administration
+
+---
+
+# Documentation
+
+Toute la documentation est disponible dans :
+
+docs/
+
+- CONSTITUTION_PLANE_R_CREW.md
+- ARCHITECTURE.md
+- ROADMAP.md
+- CHANGELOG.md
+- NORMES_DEVELOPPEMENT.md
+
+---
+
+# Déploiement
+
+Le projet utilise :
+
+- Google Apps Script
+- clasp
+- Visual Studio Code
+
+Déploiement :
+
+```bash
+clasp push
+```
+
+Puis :
+
+- Déployer
+- Gérer les déploiements
+- Mettre à jour
+
+---
+
+# Version
+
+Version actuelle :
+
+3.0
+
+---
+
+# Concepteur
+
+Plane'R Crew est un projet imaginé, conçu et piloté par :
+
+**Jonathan Van Passenhove**
+
+Président de l'association Les Sonorités de Montcul.
+
+Le développement du logiciel est réalisé avec l'assistance de l'intelligence artificielle d'OpenAI (ChatGPT), sous la direction et selon les spécifications fonctionnelles définies par le concepteur du projet.
+
+---
+
+# Licence
+
+Projet privé.
+
+Tous droits réservés.

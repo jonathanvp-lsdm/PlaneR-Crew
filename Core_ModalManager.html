@@ -1,0 +1,159 @@
+/* =====================================================
+   PLANE'R CREW
+   MODAL MANAGER
+===================================================== */
+
+window.Core_ModalManager = (function(){
+
+    let modal = null;
+
+    function ensureModal(){
+
+        if(modal){
+            return modal;
+        }
+
+        const html = `
+
+<div
+    class="modal fade"
+    id="crmModal"
+    tabindex="-1">
+
+    <div
+        id="crmModalDialog"
+        class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h4
+                    id="crmModalTitle"
+                    class="modal-title">
+
+                </h4>
+
+                <button
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div
+                id="crmModalBody"
+                class="modal-body">
+
+            </div>
+
+            <div
+                id="crmModalFooter"
+                class="modal-footer">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+`;
+
+        document.body.insertAdjacentHTML(
+            "beforeend",
+            html
+        );
+
+        modal = new bootstrap.Modal(
+
+            document.getElementById(
+                "crmModal"
+            )
+
+        );
+
+        return modal;
+
+    }
+
+    return{
+
+        open(options){
+
+            ensureModal();
+
+            document.getElementById(
+                "crmModalTitle"
+            ).innerHTML =
+                options.title || "";
+
+            document.getElementById(
+                "crmModalBody"
+            ).innerHTML =
+                options.body || "";
+
+            document.getElementById(
+                "crmModalFooter"
+            ).innerHTML =
+                options.footer || "";
+
+            const dialog =
+                document.getElementById(
+                    "crmModalDialog"
+                );
+
+            dialog.className =
+                "modal-dialog " +
+                (options.size || "modal-lg");
+
+            modal.show();
+
+        },
+
+        close(){
+
+            if(modal){
+
+                modal.hide();
+
+            }
+
+        }
+
+    };
+
+})();
+
+/* =====================================================
+   TEST MODAL
+===================================================== */
+
+function testModal(){
+
+    Core_ModalManager.open({
+
+        title: "Test ModalManager",
+
+        body: `
+            <h3>🎉 Ça fonctionne !</h3>
+
+            <p>
+                ModalManager est prêt.
+            </p>
+        `,
+
+        footer: `
+            <button
+                class="btn btn-primary"
+                onclick="Core_ModalManager.close()"></button>
+
+                Fermer
+
+            </button>
+        `
+
+    });
+
+}

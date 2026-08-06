@@ -1,0 +1,79 @@
+<div class="module-page">
+
+    <div class="module-header">
+
+        <h1>
+
+            <i class="fa-solid fa-file-lines"></i>
+
+            Documents
+
+        </h1>
+
+        <p>
+
+            Gestion des documents des bénévoles.
+
+        </p>
+
+    </div>
+
+    <div class="dashboard-card mt-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h3 class="mb-0">
+
+                📄 Documents
+
+            </h3>
+
+            <span
+                id="nbDocuments"
+                class="badge bg-primary">
+
+                0
+
+            </span>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Bénévole</th>
+
+                        <th>Type</th>
+
+                        <th>Statut</th>
+
+                        <th>Date</th>
+
+                        <th class="text-center">
+
+                            Actions
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="listeDocuments">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <?!= include("DocumentsClient"); ?>
+
+</div>

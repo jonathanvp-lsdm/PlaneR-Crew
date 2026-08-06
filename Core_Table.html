@@ -1,0 +1,229 @@
+/* =====================================================
+   PLANE'R CREW
+   CORE TABLE
+   Version 1.1
+===================================================== */
+
+window.Core_Table = (function(){
+
+    function render(options){
+
+        const columns = options.columns || [];
+        const data = options.data || [];
+
+        let html = `
+
+<div class="table-responsive">
+
+<table class="table table-hover table-striped align-middle">
+
+<thead class="table-dark">
+
+<tr>
+
+`;
+
+        /* =====================================================
+           ENTETES
+        ===================================================== */
+
+        columns.forEach(function(column){
+
+            const width =
+                column.width
+                ? `style="width:${column.width};"`
+                : "";
+
+            const align =
+                column.align
+                ? `text-${column.align}`
+                : "";
+
+            html += `
+
+<th
+    ${width}
+    class="${align}">
+
+    ${column.title}
+
+</th>
+
+`;
+
+        });
+
+        html += `
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+        /* =====================================================
+           AUCUNE DONNEE
+        ===================================================== */
+
+        if(data.length === 0){
+
+            html += `
+
+<tr>
+
+<td
+    colspan="${columns.length}"
+    class="text-center text-muted py-4">
+
+    Aucune donnée.
+
+</td>
+
+</tr>
+
+`;
+
+        }
+
+        /* =====================================================
+           TRAITEMENT DES LIGNES
+        ===================================================== */
+
+        else{
+
+            data.forEach(function(row){
+
+                html += "<tr>";
+
+                columns.forEach(function(column){
+
+                    let value =
+                        row[column.field];
+
+                    /* ===========================
+                       FORMATTER PERSONNALISE
+                    =========================== */
+
+                    if(typeof column.formatter === "function"){
+
+                        value =
+                            column.formatter(value,row);
+
+                    }
+
+                    /* ==============================
+                           ACTIONS
+                    ============================== */
+
+                    if(column.type === "actions"){
+
+    value = "";
+
+    column.actions.forEach(function(action){
+
+        if(typeof action === "string"){
+
+            value += Core_ActionTable.render({
+
+                type: action
+
+            });
+
+        }else{
+
+            value += Core_ActionTable.render({
+
+                type: action.type,
+
+                id: row.ID,
+
+                onclick: action.onclick
+
+            });
+
+        }
+
+    });
+
+}
+
+                    /* ===========================
+                       BOOLEAN
+                    =========================== */
+
+                    else if(column.type==="boolean"){
+
+                        value =
+                            value
+                            ? "✅ Oui"
+                            : "❌ Non";
+
+                    }
+
+                    else{
+
+                        value =
+                            value ?? "";
+
+                    }
+
+                    const align =
+                        column.align
+                        ? `text-${column.align}`
+                        : "";
+
+                    const width =
+                        column.width
+                        ? `style="width:${column.width};"`
+                        : "";
+
+                    html += `
+
+<td
+    ${width}
+    class="${align}">
+
+${value}
+
+</td>
+
+`;
+
+                });
+                html += "</tr>";
+
+            });
+
+        }
+
+        /* =====================================================
+           FIN TABLEAU
+        ===================================================== */
+
+        html += `
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+        return html;
+
+    }
+
+    /* =====================================================
+       API PUBLIQUE
+    ===================================================== */
+
+    return{
+
+        render
+
+    };
+
+})();

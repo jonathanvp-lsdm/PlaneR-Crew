@@ -1,0 +1,99 @@
+/* =====================================================
+   PLANE'R CREW
+   CORE ACTION TABLE
+   Version 1.2
+===================================================== */
+
+window.Core_ActionTable = (function(){
+
+    /* =====================================================
+       CONFIGURATION
+    ===================================================== */
+
+    const ACTIONS = {
+
+        view: {
+
+            icon: "fa-eye",
+
+            color: "primary",
+
+            title: "Voir"
+
+        },
+
+        edit: {
+
+            icon: "fa-pen-to-square",
+
+            color: "warning",
+
+            title: "Modifier"
+
+        },
+
+        delete: {
+
+            icon: "fa-trash",
+
+            color: "danger",
+
+            title: "Supprimer"
+
+        }
+
+    };
+
+    /* =====================================================
+       RENDER
+    ===================================================== */
+
+    function render(options){
+
+        options = options || {};
+
+        const type =
+            options.type;
+
+        const id =
+            options.id || "";
+
+        const onclick =
+            options.onclick || "";
+
+        const action =
+            ACTIONS[type];
+
+        if(!action){
+
+            return "";
+
+        }
+
+        return Core_Button.render({
+
+            icon: action.icon,
+
+            color: action.color,
+
+            title: action.title,
+
+            onclick: onclick
+                ? onclick + "('" + id + "')"
+                : ""
+
+        });
+
+    }
+
+    /* =====================================================
+       API
+    ===================================================== */
+
+    return{
+
+        render
+
+    };
+
+})();

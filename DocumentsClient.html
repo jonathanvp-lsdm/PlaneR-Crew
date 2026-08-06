@@ -1,0 +1,75 @@
+/* =====================================================
+   PLANE'R CREW
+   MODULE DOCUMENTS
+===================================================== */
+
+let documents = [];
+
+/* =====================================================
+   CHARGEMENT
+===================================================== */
+
+function chargerDocuments(){
+
+    google.script.run
+
+        .withSuccessHandler(function(data){
+
+            documents = data;
+
+            renderDocuments();
+
+        })
+
+        .withFailureHandler(function(err){
+
+            alert(err.message);
+
+        })
+
+        .getDocuments();
+
+}
+
+/* =====================================================
+   AFFICHAGE
+===================================================== */
+
+function renderDocuments(){
+
+    const container =
+        document.getElementById(
+            "listeDocuments"
+        );
+
+    if(!container){
+        return;
+    }
+
+    if(documents.length === 0){
+
+        container.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="text-center text-muted py-4">
+
+                    Aucun document.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        document.getElementById(
+            "nbDocuments"
+        ).textContent = "0";
+
+        return;
+
+    }
+
+}

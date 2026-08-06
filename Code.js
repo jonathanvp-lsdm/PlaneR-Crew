@@ -50,10 +50,14 @@ function loadPage(page){
 
   try{
 
-    return HtmlService
+    const html = HtmlService
       .createTemplateFromFile(page)
       .evaluate()
       .getContent();
+
+    Logger.log(html);
+
+    return html;
 
   }
 

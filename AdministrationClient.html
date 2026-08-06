@@ -1,0 +1,197 @@
+/* =====================================================
+   PLANE'R CREW
+   MODULE ADMINISTRATION
+   Version 3.2.0
+===================================================== */
+
+/* =====================================================
+   INITIALISATION
+===================================================== */
+
+function chargerAdministration(){
+
+    renderAdministration();
+
+}
+
+/* =====================================================
+   AFFICHAGE
+===================================================== */
+
+function renderAdministration(){
+
+    const container =
+        document.getElementById("adminContainer");
+
+    if(!container){
+        return;
+    }
+
+    container.innerHTML = `
+
+<div class="row">
+
+    ${Core_Card.render({
+
+        icon: "fa-gear",
+
+        title: "Configuration",
+
+        subtitle: "Paramètres généraux du CRM.",
+
+        button: "Ouvrir",
+
+        onclick: "ouvrirConfiguration()"
+
+    })}
+
+    ${Core_Card.render({
+
+        icon: "fa-file-signature",
+
+        title: "Campagne",
+
+        subtitle: "Ouverture et fermeture des inscriptions.",
+
+        button: "Ouvrir",
+
+        onclick: "ouvrirCampagne()"
+
+    })}
+
+    ${Core_Card.render({
+
+        icon: "fa-calendar",
+
+        title: "Éditions",
+
+        subtitle: "Gestion des éditions du Plane'R Fest.",
+
+        button: "Ouvrir",
+
+        onclick: "ouvrirEditions()"
+
+    })}
+
+</div>
+
+`;
+
+}
+
+/* =====================================================
+   CONFIGURATION
+===================================================== */
+
+function ouvrirConfiguration(){
+
+    alert("Module Configuration en cours de développement.");
+
+}
+
+/* =====================================================
+   CAMPAGNE
+===================================================== */
+
+function ouvrirCampagne(){
+
+    alert("Module Campagne en cours de développement.");
+
+}
+
+/* =====================================================
+   EDITIONS
+===================================================== */
+
+function ouvrirEditions(){
+
+    google.script.run
+
+        .withSuccessHandler(renderEditions)
+
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+            alert(err.message);
+
+        })
+
+        .getEditions();
+
+}
+
+function renderEditions(editions){
+
+    const html = Core_Table.render({
+
+        columns: [
+
+            {
+                field: "NOM",
+                title: "Édition"
+            },
+
+            {
+                 field: "ETAT",
+
+                 title: "État",
+
+                 formatter: Core_Badge.editionState
+
+
+            },
+
+            {
+                field: "EST_ACTIVE",
+
+                title: "Active",
+
+                formatter: Core_Badge.boolean,
+
+                align: "center",
+
+                width: "120px"
+
+            },
+
+            {
+                field: "ACTIONS",
+
+                title: "Actions",
+
+                type: "actions",
+
+                actions: [
+
+                    "view",
+
+                    "edit",
+
+                    "delete"
+
+                 ],
+
+                align: "center",
+
+                width: "140px"
+
+            }
+
+        ],
+
+        data: editions
+
+    });
+
+    Core_ModalManager.open({
+
+        title: "Gestion des éditions",
+
+        body: html,
+
+        size: "lg"
+
+    });
+
+} 

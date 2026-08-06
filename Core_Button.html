@@ -1,0 +1,68 @@
+/* =====================================================
+   PLANE'R CREW
+   CORE BUTTON
+   Version 1.2
+===================================================== */
+
+window.Core_Button = (function(){
+
+    /* =====================================================
+       RENDER
+    ===================================================== */
+
+    function render(options){
+
+        options = options || {};
+
+        const icon =
+            options.icon || "";
+
+        const color =
+            options.color || "secondary";
+
+        const title =
+            options.title || "";
+
+        const outline =
+            options.outline !== false;
+
+        const onclick =
+            options.onclick || "";
+
+        const buttonClass =
+            outline
+                ? "btn-outline-" + color
+                : "btn-" + color;
+
+        const onclickAttribute =
+            onclick
+                ? `onclick="${onclick}"`
+                : "";
+
+        return `
+
+<button
+    type="button"
+    class="btn btn-sm ${buttonClass} pc-btn-action"
+    title="${title}"
+    ${onclickAttribute}>
+
+    <i class="fa-solid ${icon}"></i>
+
+</button>
+
+`;
+
+    }
+
+    /* =====================================================
+       API
+    ===================================================== */
+
+    return{
+
+        render
+
+    };
+
+})();

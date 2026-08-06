@@ -48,6 +48,25 @@ function loadPage(page) {
       typeof loadEquipes === "function"
     ) {
       loadEquipes();
+    }
+
+    if (
+      page === "affectations" &&
+      typeof chargerAffectations === "function"
+    ) {
+      chargerAffectations();
+    }
+    if (
+      page === "documents" &&
+      typeof chargerDocuments === "function"
+    ) {
+    chargerDocuments();
+    }
+    if (
+      page === "administration" &&
+      typeof chargerAdministration === "function"
+    ) {
+    chargerAdministration();
 }
 
     return;
@@ -76,6 +95,27 @@ function loadPage(page) {
         typeof loadEquipes === "function"
       ) {
         loadEquipes();
+      }
+
+      if (
+        page === "affectations" &&
+        typeof chargerAffectations === "function"
+      ) {
+        chargerAffectations();
+      }
+
+        if (
+          page === "documents" &&
+          typeof chargerDocuments === "function"
+        ) {
+          chargerDocuments();
+        }
+       
+        if (
+          page === "administration" &&
+          typeof chargerAdministration === "function"
+        ) {
+          chargerAdministration();
 }
 
     })
@@ -98,8 +138,19 @@ function loadPage(page) {
 
 window.loadPage = loadPage;
 
+<?!= include("Core_Card"); ?>
+<?!= include("Core_Badge"); ?>
+<?!= include("Core_Button"); ?>
+<?!= include("Core_ActionTable"); ?>
+<?!= include("Core_Table"); ?>
+<?!= include("Core_ModalManager"); ?>
+
+
 <?!= include("InscriptionsClient"); ?>
 <?!= include("EquipesClient"); ?>
+<?!= include("AffectationsClient"); ?>
+<?!= include("DocumentsClient"); ?>
+<?!= include("AdministrationClient"); ?>
 
 document.addEventListener("DOMContentLoaded", function(){
 

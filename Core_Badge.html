@@ -1,0 +1,143 @@
+/* =====================================================
+   PLANE'R CREW
+   CORE BADGE
+   Version 1.1
+===================================================== */
+
+window.Core_Badge = (function(){
+
+    function render(options){
+
+        options = options || {};
+
+        const text =
+            options.text || "";
+
+        const color =
+            options.color || "secondary";
+
+        const pill =
+            options.pill
+                ? " rounded-pill"
+                : "";
+
+        return `
+
+<span class="badge bg-${color}${pill}">
+
+    ${text}
+
+</span>
+
+`;
+
+    }
+
+    /* =====================================================
+       ETAT D'UNE EDITION
+    ===================================================== */
+
+    function editionState(value){
+
+        const states = {
+
+            PREPARATION: "primary",
+
+            INSCRIPTIONS_OUVERTES: "success",
+
+            INSCRIPTIONS_FERMEES: "warning",
+
+            TERMINEE: "secondary",
+
+            ARCHIVEE: "dark"
+
+        };
+
+        return render({
+
+            text: value,
+
+            color: states[value] || "secondary",
+
+            pill: true
+
+        });
+
+    }
+
+    /* =====================================================
+       BOOLEEN
+    ===================================================== */
+
+    function boolean(value){
+
+        return render({
+
+            text: value ? "Oui" : "Non",
+
+            color: value ? "success" : "danger",
+
+            pill: true
+
+        });
+
+    }
+
+    /* =====================================================
+       VALIDATION
+    ===================================================== */
+
+    function validation(value){
+
+        const values = {
+
+            VALIDE: {
+                text: "Validé",
+                color: "success"
+            },
+
+            REFUSE: {
+                text: "Refusé",
+                color: "danger"
+            },
+
+            ATTENTE: {
+                text: "En attente",
+                color: "warning"
+            }
+
+        };
+
+        const badge = values[value] || {
+
+            text: value,
+
+            color: "secondary"
+
+        };
+
+        return render({
+
+            text: badge.text,
+
+            color: badge.color,
+
+            pill: true
+
+        });
+
+    }
+
+    return{
+
+        render,
+
+        editionState,
+
+        boolean,
+
+        validation
+
+    };
+
+})();

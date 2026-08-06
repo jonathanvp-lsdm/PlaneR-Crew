@@ -168,27 +168,6 @@ function enregistrerAffectation(
 
 }
 
-/* =====================================================
-   TEST
-===================================================== */
-
-function testAffectation(){
-
-    Logger.log(
-
-        enregistrerAffectation(
-
-            "001",
-
-            1,
-
-            "Alex"
-
-        )
-
-    );
-
-}
 
 /* =====================================================
    REAFFECTER UN BENEVOLE
@@ -269,5 +248,94 @@ function reaffecterBenevole(
         message:"Réaffectation effectuée."
 
     };
+
+}
+
+/* =====================================================
+   RECUPERER LES AFFECTATIONS ACTIVES
+===================================================== */
+
+function getAffectationsActives(){
+
+    const ss =
+        SpreadsheetApp.getActiveSpreadsheet();
+
+    const sheetAffectations =
+        ss.getSheetByName("AFFECTATIONS");
+
+    const sheetBenevoles =
+        ss.getSheetByName("BENEVOLES");
+
+    const sheetPoles =
+        ss.getSheetByName("POLES");
+
+    const affectations =
+        sheetAffectations
+            .getDataRange()
+            .getValues();
+
+    const benevoles =
+        sheetBenevoles
+            .getDataRange()
+            .getValues();
+
+    const poles =
+        sheetPoles
+            .getDataRange()
+            .getValues();
+
+    affectations.shift();
+    benevoles.shift();
+    poles.shift();
+
+    return affectations
+
+        .filter(function(a){
+
+            return a[7] === "OUI";
+
+        })
+
+        .map(function(a){
+
+            const benevole =
+                benevoles.find(
+                    b => String(b[0]) === String(a[2])
+                );
+
+            const pole =
+                poles.find(
+                    p => Number(p[0]) === Number(a[3])
+                );
+
+            return{
+
+                id:a[0],
+
+                idBenevole:a[2],
+
+                nom:
+                    benevole
+                        ? benevole[2] + " " + benevole[1]
+                        : "Inconnu",
+
+                pole:
+                    pole
+                        ? pole[6] + " " + pole[1]
+                        : "Inconnu",
+
+                idPole:a[3],
+
+                affectePar:a[5],
+
+                date: Utilities.formatDate(
+                    new Date(a[4]),
+                    Session.getScriptTimeZone(),
+                    "dd/MM/yyyy HH:mm"
+                )
+
+            };
+
+        });
 
 }
