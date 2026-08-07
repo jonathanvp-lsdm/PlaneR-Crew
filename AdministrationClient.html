@@ -123,7 +123,7 @@ function ouvrirEditions(){
 
 function renderEditions(editions){
 
-    const html = Core_Table.render({
+    const table = Core_Table.render({
 
         columns: [
 
@@ -133,65 +133,71 @@ function renderEditions(editions){
             },
 
             {
-                 field: "ETAT",
-
-                 title: "État",
-
-                 formatter: Core_Badge.editionState
-
-
+                field: "ETAT",
+                title: "État",
+                formatter: Core_Badge.editionState
             },
 
             {
                 field: "EST_ACTIVE",
-
                 title: "Active",
-
                 formatter: Core_Badge.boolean,
-
                 align: "center",
-
                 width: "120px"
-
             },
 
-{
-    field: "ACTIONS",
+            {
+                field: "ACTIONS",
+                title: "Actions",
+                type: "actions",
 
-    title: "Actions",
+                actions: [
 
-    type: "actions",
+                    {
+                        type: "view",
+                        onclick: "voirEdition"
+                    },
 
-    actions: [
+                    {
+                        type: "edit",
+                        onclick: "modifierEdition"
+                    },
 
-        {
-            type: "view",
-            onclick: "voirEdition"
-        },
+                    {
+                        type: "delete",
+                        onclick: "supprimerEdition"
+                    }
 
-        {
-            type: "edit",
-            onclick: "modifierEdition"
-        },
+                ],
 
-        {
-            type: "delete",
-            onclick: "supprimerEdition"
-        }
+                align: "center",
+                width: "140px"
+            }
 
-    ],
+        ],
 
-    align: "center",
+        data: editions
 
-    width: "140px"
+    });
 
-}
-    
-],
+    const html = `
 
-data: editions
+        <div class="d-flex justify-content-end mb-3">
 
-});
+            <button
+                class="btn btn-success"
+                onclick="nouvelleEdition()">
+
+                <i class="fas fa-plus"></i>
+                Nouvelle édition
+
+            </button>
+
+        </div>
+
+        ${table}
+
+    `;
 
     Core_ModalManager.open({
 
@@ -203,7 +209,17 @@ data: editions
 
     });
 
-} 
+}
+
+/* =====================================================
+   NOUVELLE EDITION
+===================================================== */
+
+function nouvelleEdition(){
+
+    alert("Nouvelle édition");
+
+}
 
 /* =====================================================
    VOIR UNE EDITION
