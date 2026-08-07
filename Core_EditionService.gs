@@ -220,6 +220,51 @@ function createEdition(data) {
 
 }
 
+/* =====================================================
+   MODIFIER UNE EDITION
+===================================================== */
+
+function updateEdition(data) {
+
+  const sheet = getSheet();
+
+  const values = sheet.getDataRange().getValues();
+  const headers = values.shift();
+
+  const colId = headers.indexOf("ID");
+
+  if (colId === -1) {
+    throw new Error("Colonne ID introuvable.");
+  }
+
+  values.forEach((row, index) => {
+
+    if (Number(row[colId]) === Number(data.ID)) {
+
+      headers.forEach((header, colIndex) => {
+
+        if (header === "ID") {
+          return;
+        }
+
+        sheet
+          .getRange(index + 2, colIndex + 1)
+          .setValue(data[header]);
+
+      });
+
+    }
+
+  });
+
+  if (data.EST_ACTIVE === true) {
+    setEditionActive(data.ID);
+  }
+
+  return true;
+
+}
+
   /* =====================================================
      API PUBLIQUE
   ===================================================== */
@@ -231,6 +276,7 @@ return {
   getEditionById,
 
   createEdition,
+  updateEdition,
 
   setEditionActive,
   setEtatEdition
@@ -280,5 +326,15 @@ function testGetToutesLesEditions() {
   Logger.log(
     JSON.stringify(editions, null, 2)
   );
+
+}
+
+/* =====================================================
+   API GOOGLE SCRIPT
+===================================================== */
+
+function updateEdition(data){
+
+  return Core_EditionService.updateEdition(data);
 
 }

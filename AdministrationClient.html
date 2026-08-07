@@ -303,8 +303,7 @@ function afficherEditionFormulaire(edition){
 
         <input
             id="editionNom"
-            class="form-control"
-            value="${edition.NOM}">
+            class="form-control">
 
     </div>
 
@@ -340,21 +339,107 @@ function afficherEditionFormulaire(edition){
 
     </div>
 
+    <div class="form-check mt-3">
+
+        <input
+            id="editionActive"
+            class="form-check-input"
+            type="checkbox">
+
+        <label
+            class="form-check-label"
+            for="editionActive">
+
+            Édition active
+
+        </label>
+
+    </div>
+
 </div>
+
+`;
+
+    const footer = `
+
+<button
+    class="btn btn-secondary"
+    onclick="Core_ModalManager.close()">
+
+    Annuler
+
+</button>
+
+<button
+    class="btn btn-primary"
+    onclick="enregistrerEdition(${edition.ID})">
+
+    Enregistrer
+
+</button>
 
 `;
 
     Core_ModalManager.open({
 
-        title: "Modifier",
+        title: "Modifier une édition",
 
         body: html,
+
+        footer: footer,
 
         size: "md"
 
     });
 
+    document.getElementById("editionNom").value = edition.NOM;
+
+    document.getElementById("editionEtat").value = edition.ETAT;
+
+    document.getElementById("editionActive").checked = edition.EST_ACTIVE;
+
 }
+
+/* =====================================================
+   ENREGISTRER UNE EDITION
+===================================================== */
+
+function enregistrerEdition(id){
+
+    const edition = {
+
+        ID: id,
+
+        NOM: document.getElementById("editionNom").value.trim(),
+
+        ETAT: document.getElementById("editionEtat").value,
+
+        EST_ACTIVE: document.getElementById("editionActive").checked
+
+    };
+
+    google.script.run
+
+        .withSuccessHandler(function(){
+
+            Core_ModalManager.close();
+
+            ouvrirEditions();
+
+        })
+
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+            alert(err.message);
+
+        })
+
+        .updateEdition(edition);
+
+}
+
 /* =====================================================
    AFFICHER UNE EDITION
 ===================================================== */
