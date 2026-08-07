@@ -386,7 +386,9 @@ function afficherEditionFormulaire(edition){
 
 `;
 
-    const footer = `
+const editionId = edition.ID ?? "";
+
+const footer = `
 
 <button
     class="btn btn-secondary"
@@ -398,13 +400,16 @@ function afficherEditionFormulaire(edition){
 
 <button
     class="btn btn-primary"
-    onclick="enregistrerEdition()">
+    onclick="enregistrerEdition('${editionId}')">
 
     Enregistrer
 
 </button>
 
 `;
+
+    console.log("Edition reçue :", edition);
+    console.log("Edition.ID :", edition.ID);
 
     Core_ModalManager.open({
 
@@ -434,6 +439,8 @@ function afficherEditionFormulaire(edition){
 
 function enregistrerEdition(id){
 
+    console.log("ID reçu :", id);
+
     const edition = {
 
         ID: id,
@@ -446,35 +453,48 @@ function enregistrerEdition(id){
 
     };
 
-    // Création (temporaire)
+    const success = function(){
+
+        Core_ModalManager.close();
+
+        ouvrirEditions();
+
+    };
+
+    const failure = function(err){
+
+        console.error(err);
+
+        alert(err.message);
+
+    };
+
+    // Création
     if(!edition.ID){
 
-        console.log("Nouvelle édition :", edition);
+        console.log("Objet envoyé :", edition);
+        console.log(">>> CREATE");
 
-        alert("Création d'une nouvelle édition");
+        google.script.run
+
+            .withSuccessHandler(success)
+
+            .withFailureHandler(failure)
+
+            .createEdition(edition);
 
         return;
 
     }
 
     // Modification
+
+    console.log(">>> CREATE");  
     google.script.run
 
-        .withSuccessHandler(function(){
+        .withSuccessHandler(success)
 
-            Core_ModalManager.close();
-
-            ouvrirEditions();
-
-        })
-
-        .withFailureHandler(function(err){
-
-            console.error(err);
-
-            alert(err.message);
-
-        })
+        .withFailureHandler(failure)
 
         .updateEdition(edition);
 

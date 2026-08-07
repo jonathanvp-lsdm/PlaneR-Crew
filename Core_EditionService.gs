@@ -188,6 +188,9 @@ function getData() {
 
 function createEdition(data) {
 
+    Logger.log("===== CREATE =====");
+    Logger.log(JSON.stringify(data));
+
   const sheet = getSheet();
 
   const headers =
@@ -214,9 +217,15 @@ function createEdition(data) {
 
   });
 
-  sheet.appendRow(row);
+sheet.appendRow(row);
 
-  return true;
+const newId = row[headers.indexOf("ID")];
+
+if (data.EST_ACTIVE === true) {
+    setEditionActive(newId);
+}
+
+return true;
 
 }
 
@@ -225,6 +234,9 @@ function createEdition(data) {
 ===================================================== */
 
 function updateEdition(data) {
+
+    Logger.log("===== UPDATE =====");
+    Logger.log(JSON.stringify(data));
 
   const sheet = getSheet();
 
@@ -336,5 +348,11 @@ function testGetToutesLesEditions() {
 function updateEdition(data){
 
   return Core_EditionService.updateEdition(data);
+
+}
+
+function createEdition(data){
+
+  return Core_EditionService.createEdition(data);
 
 }
