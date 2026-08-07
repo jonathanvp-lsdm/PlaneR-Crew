@@ -286,13 +286,69 @@ function supprimerEdition(id){
 /* =====================================================
    AFFICHER LE FORMULAIRE DE MODIFICATION
 ===================================================== */
+
 function afficherEditionFormulaire(edition){
+
+    const html = `
+
+<div class="container-fluid">
+
+    <div class="mb-3">
+
+        <label class="form-label">
+
+            Nom
+
+        </label>
+
+        <input
+            id="editionNom"
+            class="form-control"
+            value="${edition.NOM}">
+
+    </div>
+
+    <div class="mb-3">
+
+        <label class="form-label">
+
+            État
+
+        </label>
+
+        <select
+            id="editionEtat"
+            class="form-select">
+
+            <option value="PREPARATION">
+                Préparation
+            </option>
+
+            <option value="OUVERTE">
+                Ouverte
+            </option>
+
+            <option value="FERMEE">
+                Fermée
+            </option>
+
+            <option value="TERMINEE">
+                Terminée
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+`;
 
     Core_ModalManager.open({
 
-        title: "Test",
+        title: "Modifier",
 
-        body: "OK",
+        body: html,
 
         size: "md"
 
