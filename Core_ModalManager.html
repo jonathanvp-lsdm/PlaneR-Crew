@@ -81,7 +81,7 @@ window.Core_ModalManager = (function(){
     }
 
     console.log("Core_ModalManager prêt");
-    
+
     return{
 
         open(options){
@@ -120,13 +120,21 @@ if (options.buttons) {
 
         button.onclick = function(){
 
-            if(btn.action){
+    if(typeof btn.onClick === "function"){
 
-                new Function(btn.action)();
+        btn.onClick();
 
-            }
+        return;
 
-        };
+    }
+
+    if(btn.action){
+
+        new Function(btn.action)();
+
+    }
+
+};
 
         footer.appendChild(button);
 

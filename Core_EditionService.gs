@@ -218,13 +218,19 @@ function createEdition(data) {
 
     if (header === "ID") {
 
-      const editions = getData();
+      const values = sheet.getDataRange().getValues();
 
-      const maxId = editions.length
-        ? Math.max(...editions.map(e => Number(e.ID) || 0))
-        : 0;
+      const headers = values.shift();
 
-      return maxId + 1;
+      const colId = headers.indexOf("ID");
+
+      const maxId = values.reduce(function(max, row){
+
+    return Math.max(max, Number(row[colId]) || 0);
+
+}, 0);
+
+return maxId + 1;
 
     }
 
