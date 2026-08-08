@@ -28,7 +28,7 @@ const Core_EditionService = (() => {
 
   }
 
-  /* =====================================================
+/* =====================================================
    LECTURE DES DONNEES
 ===================================================== */
 
@@ -44,32 +44,49 @@ function getData() {
 
   const headers = values.shift();
 
-  return values.map(row => {
+  const colSupprime = headers.indexOf("SUPPRIME");
 
-    const edition = {};
+  return values
 
-    headers.forEach((header, index) => {
+    .filter(row => {
 
-      let value = row[index];
-
-      // Conversion des dates pour google.script.run
-      if (value instanceof Date) {
-
-        value = Utilities.formatDate(
-          value,
-          Session.getScriptTimeZone(),
-          "dd/MM/yyyy"
-        );
-
+      // Si la colonne SUPPRIME n'existe pas,
+      // on retourne toutes les lignes.
+      if (colSupprime === -1) {
+        return true;
       }
 
-      edition[header] = value;
+      return row[colSupprime] !== true &&
+       row[colSupprime] !== "TRUE";
+
+    })
+
+    .map(row => {
+
+      const edition = {};
+
+      headers.forEach((header, index) => {
+
+        let value = row[index];
+
+        // Conversion des dates pour google.script.run
+        if (value instanceof Date) {
+
+          value = Utilities.formatDate(
+            value,
+            Session.getScriptTimeZone(),
+            "dd/MM/yyyy"
+          );
+
+        }
+
+        edition[header] = value;
+
+      });
+
+      return edition;
 
     });
-
-    return edition;
-
-  });
 
 }
 
@@ -211,9 +228,13 @@ function createEdition(data) {
 
     }
 
+    if (header === "SUPPRIME") {
+    return false;
+}
+
     return data[header] !== undefined
-      ? data[header]
-      : "";
+    ? data[header]
+    : "";
 
   });
 
@@ -277,6 +298,53 @@ function updateEdition(data) {
 
 }
 
+/* =====================================================
+   SUPPRIMER UNE EDITION
+===================================================== */
+
+function deleteEdition(id) {
+
+    const edition = getEditionById(id);
+
+    if (!edition) {
+        throw new Error("Édition introuvable.");
+    }
+
+   if (String(edition.EST_ACTIVE) === "true" ||
+    String(edition.EST_ACTIVE) === "TRUE") {
+
+    throw new Error("Impossible de supprimer l'édition active.");
+    }
+
+    const sheet = getSheet();
+
+    const values = sheet.getDataRange().getValues();
+
+    const headers = values.shift();
+
+    const colId = headers.indexOf("ID");
+    const colSupprime = headers.indexOf("SUPPRIME");
+
+    if (colId === -1 || colSupprime === -1) {
+        throw new Error("Colonne SUPPRIME introuvable.");
+    }
+
+    values.forEach((row, index) => {
+
+        if (Number(row[colId]) === Number(id)) {
+
+            sheet
+                .getRange(index + 2, colSupprime + 1)
+                .setValue(true);
+
+        }
+
+    });
+
+    return true;
+
+}
+
   /* =====================================================
      API PUBLIQUE
   ===================================================== */
@@ -289,6 +357,7 @@ return {
 
   createEdition,
   updateEdition,
+  deleteEdition,
 
   setEditionActive,
   setEtatEdition
@@ -355,4 +424,8 @@ function createEdition(data){
 
   return Core_EditionService.createEdition(data);
 
+}
+
+function deleteEdition(id){
+    return Core_EditionService.deleteEdition(id);
 }
