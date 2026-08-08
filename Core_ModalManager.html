@@ -5,6 +5,8 @@
 
 window.Core_ModalManager = (function(){
 
+    console.log("Core_ModalManager chargé");
+
     let modal = null;
 
     function ensureModal(){
@@ -78,6 +80,8 @@ window.Core_ModalManager = (function(){
 
     }
 
+    console.log("Core_ModalManager prêt");
+    
     return{
 
         open(options){
@@ -94,10 +98,47 @@ window.Core_ModalManager = (function(){
             ).innerHTML =
                 options.body || "";
 
-            document.getElementById(
-                "crmModalFooter"
-            ).innerHTML =
-                options.footer || "";
+const footer =
+    document.getElementById(
+        "crmModalFooter"
+    );
+
+if (options.buttons) {
+
+    footer.innerHTML = "";
+
+    options.buttons.forEach(function(btn){
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "btn " + (btn.class || "btn-primary");
+
+        button.textContent =
+            btn.text || "OK";
+
+        button.onclick = function(){
+
+            if(btn.action){
+
+                new Function(btn.action)();
+
+            }
+
+        };
+
+        footer.appendChild(button);
+
+    });
+
+}
+else{
+
+    footer.innerHTML =
+        options.footer || "";
+
+}
 
             const dialog =
                 document.getElementById(

@@ -305,9 +305,71 @@ function modifierEdition(id){
 
 function supprimerEdition(id){
 
-    alert("Supprimer : " + id);
+    ouvrirConfirmationSuppression(id);
 
 }
+
+function ouvrirConfirmationSuppression(id){
+
+    Core_ModalManager.open({
+
+    title: "Suppression",
+
+    body: `
+        <div class="text-center">
+            <i class="fa-solid fa-triangle-exclamation text-warning mb-3"
+               style="font-size:48px;"></i>
+
+            <p>
+                Voulez-vous vraiment supprimer cette édition ?
+            </p>
+        </div>
+    `,
+
+    buttons: [
+
+        {
+            text: "Annuler",
+            class: "btn-secondary",
+            action: "Core_ModalManager.close();"
+        },
+
+        {
+            text: "Supprimer",
+            class: "btn-danger",
+            action: "Core_ModalManager.close(); supprimerEditionConfirmee(" + id + ");"
+        }
+
+    ],
+
+    size: "modal-sm"
+
+});
+
+}
+
+function supprimerEditionConfirmee(id){
+
+    google.script.run
+
+        .withSuccessHandler(function(){
+
+            ouvrirEditions();
+
+        })
+
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+            alert(err.message);
+
+        })
+
+        .deleteEdition(id);
+
+}
+
 
 /* =====================================================
    AFFICHER LE FORMULAIRE DE MODIFICATION
