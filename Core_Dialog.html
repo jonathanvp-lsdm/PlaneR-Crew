@@ -55,6 +55,79 @@ window.Core_Dialog = (function () {
     }
 
     /* =====================================================
+   CONFIRM
+    ===================================================== */
+
+function confirm(options){
+
+    options = options || {};
+
+    Core_ModalManager.open({
+
+        title: options.title || "Confirmation",
+
+        body: `
+            <div class="text-center py-3">
+
+                <i class="fa-solid fa-triangle-exclamation text-warning mb-3"
+                   style="font-size:48px;"></i>
+
+                <p class="mb-0">
+
+                    ${options.message || "Êtes-vous sûr ?"}
+
+                </p>
+
+            </div>
+        `,
+
+        buttons: [
+
+            {
+                text: options.cancelText || "Annuler",
+                class: "btn-secondary",
+
+                onClick: function(){
+
+                    Core_ModalManager.close();
+
+                    if(typeof options.onCancel === "function"){
+
+                        options.onCancel();
+
+                    }
+
+                }
+
+            },
+
+            {
+                text: options.confirmText || "Confirmer",
+                class: options.danger ? "btn-danger" : "btn-primary",
+
+                onClick: function(){
+
+                    Core_ModalManager.close();
+
+                    if(typeof options.onConfirm === "function"){
+
+                        options.onConfirm();
+
+                    }
+
+                }
+
+            }
+
+        ],
+
+        size: "modal-sm"
+
+    });
+
+}
+
+    /* =====================================================
        TEST
     ===================================================== */
 
@@ -68,12 +141,14 @@ window.Core_Dialog = (function () {
        API
     ===================================================== */
 
-    return {
+return {
 
-        error,
+    error,
 
-        test
+    confirm,
 
-    };
+    test
+
+};
 
 })();

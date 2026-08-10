@@ -311,54 +311,25 @@ function supprimerEdition(id){
 
 function ouvrirConfirmationSuppression(id){
 
-    Core_ModalManager.open({
+    Core_Dialog.confirm({
 
-    title: "Suppression",
+        title: "Suppression",
 
-    body: `
-        <div class="text-center">
-            <i class="fa-solid fa-triangle-exclamation text-warning mb-3"
-               style="font-size:48px;"></i>
+        message: "Voulez-vous vraiment supprimer cette édition ?",
 
-            <p>
-                Voulez-vous vraiment supprimer cette édition ?
-            </p>
-        </div>
-    `,
+        confirmText: "Supprimer",
 
-buttons: [
+        cancelText: "Annuler",
 
-    {
-        text: "Annuler",
-        class: "btn-secondary",
+        danger: true,
 
-        onClick: function(){
-
-            Core_ModalManager.close();
-
-        }
-
-    },
-
-    {
-        text: "Supprimer",
-        class: "btn-danger",
-
-        onClick: function(){
-
-            Core_ModalManager.close();
+        onConfirm: function(){
 
             supprimerEditionConfirmee(id);
 
         }
 
-    }
-
-],
-
-    size: "modal-sm"
-
-});
+    });
 
 }
 
