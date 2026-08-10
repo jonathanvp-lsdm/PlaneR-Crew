@@ -5,126 +5,46 @@
 
 window.Core_Dialog = (function () {
 
-    /* =====================================================
-       ERROR
-    ===================================================== */
-
-    function error(options) {
-
-        options = options || {};
-
-        Core_ModalManager.open({
-
-            title: options.title || "Erreur",
-
-            body: `
-                <div class="text-center py-3">
-
-                    <i class="fa-solid fa-circle-xmark text-danger mb-3"
-                       style="font-size:48px;"></i>
-
-                    <p class="mb-0">
-
-                        ${options.message || "Une erreur est survenue."}
-
-                    </p>
-
-                </div>
-            `,
-
-            buttons: [
-
-                {
-                    text: "OK",
-                    class: "btn-danger",
-
-                    onClick: function(){
-
-                        Core_ModalManager.close();
-
-                    }
-
-                }
-
-            ],
-
-            size: "modal-sm"
-
-        });
-
-    }
-
-    /* =====================================================
-   SUCCESS
+/* =====================================================
+   OPEN DIALOG (PRIVÉ)
 ===================================================== */
 
-function success(options) {
+function openDialog(options){
 
     options = options || {};
 
-    Core_ModalManager.open({
+    const buttons = (options.buttons || []).map(function(btn){
 
-        title: options.title || "Succès",
+        return {
 
-        body: `
-            <div class="text-center py-3">
+            text: btn.text,
 
-                <i class="fa-solid fa-circle-check text-success mb-3"
-                   style="font-size:48px;"></i>
+            class: btn.class,
 
-                <p class="mb-0">
+            onClick: function(){
 
-                    ${options.message || "L'opération a été réalisée avec succès."}
+                Core_ModalManager.close();
 
-                </p>
+                if(typeof btn.onClick === "function"){
 
-            </div>
-        `,
-
-        buttons: [
-
-            {
-                text: "OK",
-                class: "btn-success",
-
-                onClick: function(){
-
-                    Core_ModalManager.close();
-
-                    if(typeof options.onClose === "function"){
-
-                        options.onClose();
-
-                    }
+                    btn.onClick();
 
                 }
 
             }
 
-        ],
-
-        size: "modal-sm"
+        };
 
     });
 
-}
-
-/* =====================================================
-   INFO
-===================================================== */
-
-function info(options) {
-
-    options = options || {};
-
     Core_ModalManager.open({
 
-        title: options.title || "Information",
+        title: options.title || "",
 
         body: `
             <div class="text-center py-3">
 
-                <i class="fa-solid fa-circle-info text-primary mb-3"
+                <i class="${options.icon} ${options.iconClass} mb-3"
                    style="font-size:48px;"></i>
 
                 <p class="mb-0">
@@ -136,29 +56,110 @@ function info(options) {
             </div>
         `,
 
+        buttons: buttons,
+
+        size: options.size || "modal-sm"
+
+    });
+
+}
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+function error(options){
+
+    options = options || {};
+
+    let message = options.message || "Une erreur est survenue.";
+
+    message = message.replace(/^Error:\s*/, "");
+
+    openDialog({
+
+        title: options.title || "Erreur",
+
+        icon: "fa-solid fa-circle-xmark",
+
+        iconClass: "text-danger",
+
+        message: message,
+
+        buttons: [
+
+            {
+                text: "OK",
+                class: "btn-danger"
+            }
+
+        ]
+
+    });
+
+}
+
+    /* =====================================================
+   SUCCESS
+===================================================== */
+
+function success(options){
+
+    options = options || {};
+
+    openDialog({
+
+        title: options.title || "Succès",
+
+        icon: "fa-solid fa-circle-check",
+
+        iconClass: "text-success",
+
+        message: options.message || "L'opération a été réalisée avec succès.",
+
+        buttons: [
+
+            {
+                text: "OK",
+                class: "btn-success",
+
+                onClick: options.onClose
+            }
+
+        ]
+
+    });
+
+}
+
+/* =====================================================
+   INFO
+===================================================== */
+
+function info(options){
+
+    options = options || {};
+
+    openDialog({
+
+        title: options.title || "Information",
+
+        icon: "fa-solid fa-circle-info",
+
+        iconClass: "text-primary",
+
+        message: options.message || "",
+
         buttons: [
 
             {
                 text: "OK",
                 class: "btn-primary",
 
-                onClick: function(){
-
-                    Core_ModalManager.close();
-
-                    if(typeof options.onClose === "function"){
-
-                        options.onClose();
-
-                    }
-
-                }
-
+                onClick: options.onClose
             }
 
-        ],
-
-        size: "modal-sm"
+        ]
 
     });
 
@@ -172,66 +173,35 @@ function confirm(options){
 
     options = options || {};
 
-    Core_ModalManager.open({
+    openDialog({
 
         title: options.title || "Confirmation",
 
-        body: `
-            <div class="text-center py-3">
+        icon: "fa-solid fa-triangle-exclamation",
 
-                <i class="fa-solid fa-triangle-exclamation text-warning mb-3"
-                   style="font-size:48px;"></i>
+        iconClass: "text-warning",
 
-                <p class="mb-0">
-
-                    ${options.message || "Êtes-vous sûr ?"}
-
-                </p>
-
-            </div>
-        `,
+        message: options.message || "Êtes-vous sûr ?",
 
         buttons: [
 
             {
                 text: options.cancelText || "Annuler",
+
                 class: "btn-secondary",
 
-                onClick: function(){
-
-                    Core_ModalManager.close();
-
-                    if(typeof options.onCancel === "function"){
-
-                        options.onCancel();
-
-                    }
-
-                }
-
+                onClick: options.onCancel
             },
 
             {
                 text: options.confirmText || "Confirmer",
+
                 class: options.danger ? "btn-danger" : "btn-primary",
 
-                onClick: function(){
-
-                    Core_ModalManager.close();
-
-                    if(typeof options.onConfirm === "function"){
-
-                        options.onConfirm();
-
-                    }
-
-                }
-
+                onClick: options.onConfirm
             }
 
-        ],
-
-        size: "modal-sm"
+        ]
 
     });
 
