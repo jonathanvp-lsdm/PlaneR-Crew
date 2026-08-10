@@ -57,3 +57,16 @@
 ⬜ QR Code
 
 ⬜ Notifications
+
+✅ Mission 31.4 terminée
+Framework
+Ajout de la gestion des boutons (buttons) dans Core_ModalManager.
+Compatibilité conservée avec l'ancien système footer.
+Éditions
+Remplacement du confirm() natif par une modale Bootstrap.
+Suppression logique finalisée.
+Interdiction de supprimer l'édition active.
+Correction du calcul des IDs (plus de réutilisation après suppression logique).
+Architecture
+Validation de l'approche Core_ModalManager → Core_Dialog.
+Décision de migrer progressivement des chaînes action vers des callbacks onClick.

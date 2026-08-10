@@ -5,13 +5,72 @@
 
 window.Core_Dialog = (function () {
 
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    function error(options) {
+
+        options = options || {};
+
+        Core_ModalManager.open({
+
+            title: options.title || "Erreur",
+
+            body: `
+                <div class="text-center py-3">
+
+                    <i class="fa-solid fa-circle-xmark text-danger mb-3"
+                       style="font-size:48px;"></i>
+
+                    <p class="mb-0">
+
+                        ${options.message || "Une erreur est survenue."}
+
+                    </p>
+
+                </div>
+            `,
+
+            buttons: [
+
+                {
+                    text: "OK",
+                    class: "btn-danger",
+
+                    onClick: function(){
+
+                        Core_ModalManager.close();
+
+                    }
+
+                }
+
+            ],
+
+            size: "modal-sm"
+
+        });
+
+    }
+
+    /* =====================================================
+       TEST
+    ===================================================== */
+
     function test() {
 
         console.log("Core_Dialog OK");
 
     }
 
+    /* =====================================================
+       API
+    ===================================================== */
+
     return {
+
+        error,
 
         test
 

@@ -326,21 +326,35 @@ function ouvrirConfirmationSuppression(id){
         </div>
     `,
 
-    buttons: [
+buttons: [
 
-        {
-            text: "Annuler",
-            class: "btn-secondary",
-            action: "Core_ModalManager.close();"
-        },
+    {
+        text: "Annuler",
+        class: "btn-secondary",
 
-        {
-            text: "Supprimer",
-            class: "btn-danger",
-            action: "Core_ModalManager.close(); supprimerEditionConfirmee(" + id + ");"
+        onClick: function(){
+
+            Core_ModalManager.close();
+
         }
 
-    ],
+    },
+
+    {
+        text: "Supprimer",
+        class: "btn-danger",
+
+        onClick: function(){
+
+            Core_ModalManager.close();
+
+            supprimerEditionConfirmee(id);
+
+        }
+
+    }
+
+],
 
     size: "modal-sm"
 
@@ -362,7 +376,13 @@ function supprimerEditionConfirmee(id){
 
             console.error(err);
 
-            alert(err.message);
+            Core_Dialog.error({
+
+    title: "Suppression impossible",
+
+    message: err.message
+
+});
 
         })
 
