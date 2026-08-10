@@ -55,6 +55,116 @@ window.Core_Dialog = (function () {
     }
 
     /* =====================================================
+   SUCCESS
+===================================================== */
+
+function success(options) {
+
+    options = options || {};
+
+    Core_ModalManager.open({
+
+        title: options.title || "Succès",
+
+        body: `
+            <div class="text-center py-3">
+
+                <i class="fa-solid fa-circle-check text-success mb-3"
+                   style="font-size:48px;"></i>
+
+                <p class="mb-0">
+
+                    ${options.message || "L'opération a été réalisée avec succès."}
+
+                </p>
+
+            </div>
+        `,
+
+        buttons: [
+
+            {
+                text: "OK",
+                class: "btn-success",
+
+                onClick: function(){
+
+                    Core_ModalManager.close();
+
+                    if(typeof options.onClose === "function"){
+
+                        options.onClose();
+
+                    }
+
+                }
+
+            }
+
+        ],
+
+        size: "modal-sm"
+
+    });
+
+}
+
+/* =====================================================
+   INFO
+===================================================== */
+
+function info(options) {
+
+    options = options || {};
+
+    Core_ModalManager.open({
+
+        title: options.title || "Information",
+
+        body: `
+            <div class="text-center py-3">
+
+                <i class="fa-solid fa-circle-info text-primary mb-3"
+                   style="font-size:48px;"></i>
+
+                <p class="mb-0">
+
+                    ${options.message || ""}
+
+                </p>
+
+            </div>
+        `,
+
+        buttons: [
+
+            {
+                text: "OK",
+                class: "btn-primary",
+
+                onClick: function(){
+
+                    Core_ModalManager.close();
+
+                    if(typeof options.onClose === "function"){
+
+                        options.onClose();
+
+                    }
+
+                }
+
+            }
+
+        ],
+
+        size: "modal-sm"
+
+    });
+
+}
+
+    /* =====================================================
    CONFIRM
     ===================================================== */
 
@@ -143,9 +253,13 @@ function confirm(options){
 
 return {
 
+    confirm,
+
+    success,
+
     error,
 
-    confirm,
+    info,
 
     test
 
