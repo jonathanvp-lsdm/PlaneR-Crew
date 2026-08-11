@@ -206,7 +206,11 @@ function ouvrirFiche(id){
 
     if(!volunteerActuel){
 
-        alert("Bénévole introuvable.");
+        Core_Dialog.info({
+
+    message: "Bénévole introuvable."
+
+});
 
         return;
 
@@ -344,7 +348,11 @@ function chargerPoles(){
 
             console.error(err);
 
-            alert(err.message);
+            Core_Dialog.error({
+
+    message: err.message
+
+});
 
         })
         .getPoles();
@@ -408,7 +416,11 @@ function confirmerAffectation(){
 
     if(!select || !select.value){
 
-        alert("Veuillez sélectionner un pôle.");
+        Core_Dialog.info({
+
+    message: "Veuillez sélectionner un pôle."
+
+});
 
         return;
 
@@ -504,7 +516,11 @@ function confirmerAffectation(){
 
                         .withFailureHandler(function(err){
 
-                            alert(err.message);
+                            Core_Dialog.error({
+
+    message: err.message
+
+});
 
                         })
 
@@ -556,7 +572,11 @@ function confirmerAffectation(){
 
         .withFailureHandler(function(err){
 
-            alert(err.message);
+            Core_Dialog.error({
+
+    message: err.message
+
+});
 
         })
 
@@ -586,12 +606,22 @@ document.getElementById("modalStatut").innerHTML =
 
             loadCandidatures();
 
-            alert("🔴 Candidature refusée.");
+            Core_Dialog.info({
+
+    title: "Candidature",
+
+    message: "🔴 Candidature refusée."
+
+});
 
         })
         .withFailureHandler(function(err){
 
-            alert(err.message);
+            Core_Dialog.error({
+
+    message: err.message
+
+});
 
         })
         .updateStatutBenevole(
@@ -617,12 +647,22 @@ function mettreEnAttente(){
 
             loadCandidatures();
 
-            alert("🟡 Candidature mise en attente.");
+            Core_Dialog.info({
+
+    title: "Candidature",
+
+    message: "🟡 Candidature mise en attente."
+
+}); 
 
         })
         .withFailureHandler(function(err){
 
-            alert(err.message);
+            Core_Dialog.error({
+
+    message: err.message
+
+});
 
         })
         .updateStatutBenevole(

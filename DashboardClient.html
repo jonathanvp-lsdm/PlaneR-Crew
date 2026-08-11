@@ -1,0 +1,48 @@
+/* =====================================================
+   PLANE'R CREW
+   DASHBOARD CLIENT
+===================================================== */
+
+function chargerDashboard(){
+
+    google.script.run
+
+        .withSuccessHandler(renderDashboard)
+
+        .withFailureHandler(function(err){
+
+            console.error(err);
+
+            Core_Dialog.error({
+
+                message: err.message
+
+            });
+
+        })
+
+        .getDashboardData();
+
+}
+
+/* =====================================================
+   AFFICHAGE
+===================================================== */
+
+function renderDashboard(data){
+
+    console.log("Dashboard :", data);
+
+    document.getElementById("nbInscriptions").textContent =
+        data.inscriptions;
+
+    document.getElementById("nbValides").textContent =
+        data.valides;
+
+    document.getElementById("nbAttente").textContent =
+        data.attente;
+
+    document.getElementById("nbRefuses").textContent =
+        data.refuses;
+
+}

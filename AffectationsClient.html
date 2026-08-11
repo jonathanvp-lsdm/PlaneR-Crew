@@ -35,7 +35,13 @@ function chargerAffectations(){
 
         .withFailureHandler(function(err){
 
-            alert(err.message);
+            Core_Dialog.info({
+
+    title: "En développement",
+
+    message: "Module Campagne en cours de développement."
+
+});
 
         })
 

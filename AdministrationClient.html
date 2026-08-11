@@ -85,7 +85,13 @@ function renderAdministration(){
 
 function ouvrirConfiguration(){
 
-    alert("Module Configuration en cours de développement.");
+    Core_Dialog.info({
+
+    title: "En développement",
+
+    message: "Module Configuration en cours de développement."
+
+});
 
 }
 
@@ -95,7 +101,13 @@ function ouvrirConfiguration(){
 
 function ouvrirCampagne(){
 
-    alert("Module Campagne en cours de développement.");
+    Core_Dialog.info({
+
+    title: "En développement",
+
+    message: "Module Campagne en cours de développement."
+
+});
 
 }
 
@@ -113,7 +125,13 @@ function ouvrirEditions(){
 
             console.error(err);
 
-            alert(err.message);
+            Core_Dialog.error({
+
+    title: "Erreur",
+
+    message: err.message
+
+});
 
         })
 
@@ -243,7 +261,13 @@ function voirEdition(id){
 
             if(!edition){
 
-                alert("Édition introuvable.");
+                Core_Dialog.info({
+
+    title: "Information",
+
+    message: "Édition introuvable."
+
+});
 
                 return;
 
@@ -257,7 +281,13 @@ function voirEdition(id){
 
             console.error(err);
 
-            alert(err.message);
+            Core_Dialog.error({
+
+    title: "Erreur",
+
+    message: err.message
+
+});
 
         })
 
@@ -277,7 +307,13 @@ function modifierEdition(id){
 
             if(!edition){
 
-                alert("Édition introuvable.");
+                Core_Dialog.info({
+
+    title: "Information",
+
+    message: "Édition introuvable."
+
+});
 
                 return;
 
@@ -291,7 +327,13 @@ function modifierEdition(id){
 
             console.error(err);
 
-            alert(err.message);
+            Core_Dialog.error({
+
+    title: "Erreur",
+
+    message: err.message
+
+});
 
         })
 
@@ -518,7 +560,13 @@ function enregistrerEdition(id){
 
         console.error(err);
 
-        alert(err.message);
+        Core_Dialog.error({
+
+    title: "Erreur",
+
+    message: err.message
+
+});
 
     };
 
