@@ -45,4 +45,57 @@ function renderDashboard(data){
     document.getElementById("nbRefuses").textContent =
         data.refuses;
 
+    renderAlertes(data.alertes);
+
+}
+
+function renderAlertes(alertes){
+
+    const container =
+        document.getElementById("dashboardAlertes");
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    if(!alertes || alertes.length === 0){
+
+        container.innerHTML = `
+            <li class="list-group-item text-success">
+                ✅ Aucune alerte.
+            </li>
+        `;
+
+        return;
+
+    }
+
+    alertes.forEach(function(alerte){
+
+        let icone = "ℹ️";
+
+        switch(alerte.niveau){
+
+            case "critical":
+                icone = "🔴";
+                break;
+
+            case "warning":
+                icone = "🟠";
+                break;
+
+            case "success":
+                icone = "🟢";
+                break;
+
+        }
+
+        container.innerHTML += `
+            <li class="list-group-item">
+                ${icone} ${alerte.texte}
+            </li>
+        `;
+
+    });
+
 }

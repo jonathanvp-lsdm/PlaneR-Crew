@@ -8,8 +8,6 @@ function getDashboardData() {
 
   }
 
-  Logger.log(JSON.stringify(edition));
-
   const idEdition = edition.ID;
 
   const sheet = SpreadsheetApp
@@ -22,6 +20,14 @@ function getDashboardData() {
 
   const COL_ID_EDITION = headers.indexOf("ID_EDITION");
   const COL_STATUT     = headers.indexOf("STATUT");
+
+  if (COL_ID_EDITION === -1 || COL_STATUT === -1) {
+
+    throw new Error(
+      "Colonnes ID_EDITION ou STATUT introuvables."
+    );
+
+  }
 
   let inscriptions = 0;
   let valides = 0;
@@ -52,12 +58,57 @@ function getDashboardData() {
 
   });
 
+  /* =====================================================
+     ALERTES DU DASHBOARD
+  ===================================================== */
+
+  const alertes = [];
+
+  if (attente > 0) {
+
+    alertes.push({
+
+      niveau: "critical",
+      texte: attente + " candidature(s) en attente de validation."
+
+    });
+
+  }
+
+  if (valides === 0) {
+
+    alertes.push({
+
+      niveau: "warning",
+      texte: "Aucun bénévole validé pour cette édition."
+
+    });
+
+  }
+
+  if (inscriptions === 0) {
+
+    alertes.push({
+
+      niveau: "info",
+      texte: "Aucune inscription enregistrée."
+
+    });
+
+  }
+
+  /* =====================================================
+     RETOUR
+  ===================================================== */
+
   return {
 
       inscriptions,
       valides,
       attente,
-      refuses
+      refuses,
+
+      alertes
 
   };
 
